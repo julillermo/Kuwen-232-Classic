@@ -1,1 +1,1 @@
-# KuwenTho-Classic
+# KuwenTho - Classic
