@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, nativeTheme } from 'electron';
 import * as path from 'path';
 
 let mainWindow: BrowserWindow | null;
@@ -17,6 +17,7 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
+  nativeTheme.themeSource = 'light'; // enforces light mode
 });
 
 app.on('window-all-closed', () => {
