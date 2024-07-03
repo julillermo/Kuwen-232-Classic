@@ -1,6 +1,6 @@
 // The following line is needed to use EmotionCSS like I do with work
 /** @jsxImportSource @emotion/react */
-// import { css } from "@emotion/react";
+import TitleText from "./components/TitleText";
 
 function App() {
   return (
@@ -13,17 +13,34 @@ function App() {
         padding: 0,
       }}
     >
-      <p
+      <div
         css={{
-          fontSize: 36,
-          fontWeight: 700,
-          margin: 0,
-          textAlign: "center",
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignContent: "center",
         }}
       >
-        <span css={{ color: "#10b1fe" }}>Kuwen</span>
-        <span css={{ color: "#5c96fc" }}>-232</span>
-      </p>
+        <div
+          css={{
+            width: 132,
+          }}
+        >
+        </div>
+        <TitleText />
+        <div
+          css={{
+            display: "flex",
+            flexDirection: "row",
+            // marginLeft: "auto",
+            alignSelf: "center",
+            gap: 20,
+          }}
+        >
+          <p><a href="https://github.com/julillermo/Kuwen-232-Classic">Github</a></p>
+          <p>Attributions</p>
+        </div>
+      </div>
     </div>
   );
 }
