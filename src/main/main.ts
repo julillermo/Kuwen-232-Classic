@@ -7,7 +7,9 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     webPreferences: {
       preload: path.join(__dirname, '../preload/preload.ts')
-    }
+    },
+    width: 800,
+    height: 600,
   });
 
   // Vite dev server URL

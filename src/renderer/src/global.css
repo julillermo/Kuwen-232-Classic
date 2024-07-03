@@ -1,7 +1,14 @@
+@font-face {
+  font-famly: "Comic Neue";
+  src: url("./assets/fonts/Comic Neue/ComicNeue-Regular.ttf");
+}
+
 html, body{
   margin: 0 0 0 0;
   padding: 0 0 0 0;
 
   background-color: #282c34;
   color: #abb2bf;
+
+  font-family: "Comic Neue";
 }

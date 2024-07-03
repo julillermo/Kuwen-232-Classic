@@ -4,16 +4,27 @@
 
 function App() {
   return (
-      <div
+    <div
+      css={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "top",
+        margin: "20px",
+        padding: 0,
+      }}
+    >
+      <p
         css={{
-          display: "flex",
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
+          fontSize: 36,
+          fontWeight: 700,
+          margin: 0,
+          textAlign: "center",
         }}
       >
-        <p>KuwenTho - Classic</p>
-      </div>
+        <span css={{ color: "#10b1fe" }}>Kuwen</span>
+        <span css={{ color: "#5c96fc" }}>-232</span>
+      </p>
+    </div>
   );
 }
 
