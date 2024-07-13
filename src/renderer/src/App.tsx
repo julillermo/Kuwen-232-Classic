@@ -2,7 +2,8 @@
 /** @jsxImportSource @emotion/react */
 import AppTitle from "./components/AppTitle";
 import TextInput from "./components/TextInput";
-import { Typography } from "./components/Typography";
+import Typography from "./components/Typography";
+import Button from "./components/Button";
 
 function App() {
   return (
@@ -30,7 +31,7 @@ function App() {
             display: "flex",
             flexDirection: "row",
             alignSelf: "center",
-            gap: 20,
+            gap: "24px",
           }}
         >
           <p>
@@ -40,18 +41,18 @@ function App() {
           <p>About</p>
         </div>
       </div>
-      <div css={{ height: "24px" }}></div>
+      <div css={{ height: "16px" }}></div>
       <div id="body">
         <form
           css={{
             display: "flex",
             flexDirection: "column",
-            gap: "18px",
+            gap: "16px",
           }}
         >
           <div
             id="epub-file-folder-group"
-            css={{ display: "flex", flexDirection: "column", gap: "4px" }}
+            css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <Typography color={"secondary"}>
               Path to .epub file | epub folder:
@@ -64,7 +65,7 @@ function App() {
                 gap: "20px",
               }}
             >
-              <TextInput customCSS={{ flexGrow: 1 }} />
+              <TextInput showHover={true} customCSS={{ flexGrow: 1 }} />
               <select
                 css={{
                   fontFamily: "Comic Neue",
@@ -73,18 +74,12 @@ function App() {
                 <option value="epub-file">.epub file</option>
                 <option value="epub-folder">epub folder</option>
               </select>
-              <button
-                css={{
-                  fontFamily: "Comic Neue",
-                }}
-              >
-                Set Path
-              </button>
+              <Button text="Set Path" />
             </div>
           </div>
           <div
             id="voice-recording-file-group"
-            css={{ display: "flex", flexDirection: "column", gap: "4px" }}
+            css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <Typography color={"secondary"}>
               Path to Voice Recording audio file:
@@ -97,13 +92,13 @@ function App() {
                 gap: "20px",
               }}
             >
-              <TextInput />
-              <button>Set Path</button>
+              <TextInput showHover={true} />
+              <Button text="Set Path" />
             </div>
           </div>
           <div
             id="time-labels-group"
-            css={{ display: "flex", flexDirection: "column", gap: "4px" }}
+            css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <Typography color={"secondary"}>
               Path to Time labels .txt file:{" "}
@@ -118,9 +113,9 @@ function App() {
                   gap: "20px",
                 }}
               >
-                <TextInput />
-                <button>Set Path</button>
-                <button>Manual Input</button>
+                <TextInput showHover={true} />
+                <Button text="Set Path" />
+                <Button text="Manual Input" />
               </div>
               <div id="time-labels-manual-input">
                 <textarea />
@@ -137,10 +132,10 @@ function App() {
             }}
           >
             <p>Show/Hide Additional functions</p>
-            <button>Resync</button>
-            <button>Match nav.html</button>
-            <button>Clear</button>
-            <button type="submit">Process</button>
+            <Button text="Resync" />
+            <Button text="Match nav.html" />
+            <Button type="reset" text="Clear" />
+            <Button type="submit" text="Process" />
           </div>
         </form>
       </div>

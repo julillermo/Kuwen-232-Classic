@@ -11,6 +11,8 @@ function AppTitle() {
     >
       <span css={{ color: "#10b1fe" }}>Kuwen</span>
       <span css={{ color: "#5c96fc" }}>-232</span>
+      &ensp;
+      <span css={{ color: "#10b1fe" }}>Classic</span>
     </p>
   );
 }

@@ -1,10 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { themeColors } from "../assets/themes/themeColors";
 import { CustomCSSObject } from "../types/emotion";
+import { darkenHexColor } from "../utils/color";
 
 type TextInput = {
   disabled?: boolean;
   required?: boolean;
+  showHover?: boolean;
   valid?: boolean | null;
   customCSS?: CustomCSSObject;
 };
@@ -12,21 +14,27 @@ type TextInput = {
 export default function TextInput({
   disabled,
   required,
+  showHover = false,
   valid = null,
   customCSS,
 }: TextInput) {
-  console.log(valid != null);
   return (
     <input
       type="text"
       disabled={disabled}
       required={required}
       css={[
+        showHover && {
+          "&:hover": {
+            outline: `1px solid ${darkenHexColor(themeColors.secondary, 10)}`,
+          },
+        },
         {
+          height: "24px",
           width: "100%",
           resize: "vertical",
-          borderRadius: "8px",
-          padding: "12px 14px",
+          borderRadius: "12px",
+          padding: "8px 10px",
 
           fontSize: "14px",
           fontWeight: "normal",
@@ -43,7 +51,8 @@ export default function TextInput({
           },
 
           "&:disabled": {
-            backgroundColor: themeColors.foregroundAlt,
+            outline: "none",
+            backgroundColor: darkenHexColor(themeColors.foreground, 60),
           },
 
           ...customCSS,

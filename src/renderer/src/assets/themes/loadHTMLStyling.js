@@ -2,8 +2,8 @@ const fs = require("fs"); // eslint-disable-line
 const path = require("path"); // eslint-disable-line
 
 // Also specify the theme in 'themeColors.ts'
-const themeName = "bluloco-dark-italic-color-theme.json"; // bluloco theme
-// const themeName = "nord-color-theme.json"; // nord theme
+const themeName = "bluloco-dark-italic-color-theme.json"; // bluloco dark theme
+// const themeName = "bluloco-light-italic-color-theme.json"; // bluloco theme
 
 const theme = JSON.parse(
   fs.readFileSync(path.join(__dirname, `/${themeName}`), "utf8")
@@ -13,8 +13,8 @@ const colors = theme["colors"];
 // global.css
 const globalCSS = `\
 @font-face {
-  font-famly: "Comic Neue";
-  src: url("./assets/fonts/Comic Neue/ComicNeue-Regular.ttf");
+  font-family: "Comic Neue";
+  src: url("./assets/fonts/Comic_Neue/ComicNeue-Regular.ttf");
 }
 
 html, body{

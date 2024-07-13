@@ -1,6 +1,6 @@
 // change the imported file as necessary
-import theme from "./bluloco-dark-italic-color-theme.json"; // bluloco theme
-// import theme from "./nord-color-theme.json"; // nord theme
+import theme from "./bluloco-dark-italic-color-theme.json"; // bluloco dark theme
+// import theme from "./bluloco-light-italic-color-theme.json"; // bluloco theme
 
 export type ThemeColors = {
   background: string;
@@ -23,3 +23,5 @@ export const themeColors: ThemeColors = {
   alert: theme.colors["symbolIcon.classForeground"],
   alt: theme.colors["editorInfo.foreground"],
 };
+
+console.log("themeColors", JSON.stringify(themeColors, null, 2));

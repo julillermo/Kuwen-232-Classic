@@ -15,7 +15,7 @@ type TypographyProps = {
   children: ReactNode;
 };
 
-export function Typography({ color, children }: TypographyProps) {
+export default function Typography({ color, children }: TypographyProps) {
   let textColor;
   switch (color) {
     case "secondary":
@@ -27,12 +27,15 @@ export function Typography({ color, children }: TypographyProps) {
     default:
       textColor = themeColors.foreground;
   }
+
   return (
     <p
       css={{
         margin: 0,
         color: textColor,
-        fontWeight: 700,
+
+        fontSize: "16px",
+        fontWeight: "normal",
       }}
     >
       {children}
