@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "main": "./dist/main/main.js",
   "scripts": {
-    "copyTheme": "node ./src/renderer/src/assets/themes/loadCSSTheme.js",
+    "copyTheme": "node ./src/renderer/src/assets/themes/loadHTMLStyling.js",
     "devTheme": "npm run copyTheme && electron-vite dev -w",
     "dev": "electron-vite dev -w",
     "build": "electron-vite build",

@@ -1,14 +1,12 @@
 /** @jsxImportSource @emotion/react */
-function TitleText() {
+function AppTitle() {
   return (
     <p
       css={{
         fontSize: 36,
         fontWeight: 700,
         margin: 0,
-        // textAlign: "center",
-        // alignSelf: "center",
-        // justifySelf: 'center'
+        alignSelf: "center",
       }}
     >
       <span css={{ color: "#10b1fe" }}>Kuwen</span>
@@ -17,4 +15,4 @@ function TitleText() {
   );
 }
 
-export default TitleText;
+export default AppTitle;
