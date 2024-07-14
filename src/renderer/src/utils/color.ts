@@ -1,11 +1,11 @@
-export function darkenHexColor(hexColor, amount = 10) {
+export function darkenHexColor(hexColor, amount = 0.1) {
   let r: number | string = parseInt(hexColor.substring(1, 3), 16);
   let g: number | string = parseInt(hexColor.substring(3, 5), 16);
   let b: number | string = parseInt(hexColor.substring(5, 7), 16);
 
-  r = Math.min(r, Math.round(r - r * (amount / 100)));
-  g = Math.min(g, Math.round(g - g * (amount / 100)));
-  b = Math.min(b, Math.round(b - b * (amount / 100)));
+  r = Math.max(0, r - Math.round(255 * amount));
+  g = Math.max(0, g - Math.round(255 * amount));
+  b = Math.max(0, b - Math.round(255 * amount));
 
   r = r.toString(16).padStart(2, "0");
   g = g.toString(16).padStart(2, "0");
@@ -14,18 +14,25 @@ export function darkenHexColor(hexColor, amount = 10) {
   return `#${r}${g}${b}`;
 }
 
-export function lightenHexColor(hexColor, amount = 10) {
+export function lightenHexColor(hexColor, amount = 0.1) {
   let r: number | string = parseInt(hexColor.substring(1, 3), 16);
   let g: number | string = parseInt(hexColor.substring(3, 5), 16);
   let b: number | string = parseInt(hexColor.substring(5, 7), 16);
 
-  r = Math.min(255, Math.round(r + r * (amount / 100)));
-  g = Math.min(255, Math.round(g + g * (amount / 100)));
-  b = Math.min(255, Math.round(b + b * (amount / 100)));
+  r = Math.min(255, r + Math.round(255 * amount));
+  g = Math.min(255, g + Math.round(255 * amount));
+  b = Math.min(255, b + Math.round(255 * amount));
 
   r = r.toString(16).padStart(2, "0");
   g = g.toString(16).padStart(2, "0");
   b = b.toString(16).padStart(2, "0");
 
   return `#${r}${g}${b}`;
+}
+
+export function setHexTransparency(hexColor, amount = 1) {
+  const a: number | string = Math.min(255, Math.round(255 * amount))
+    .toString(16)
+    .padStart(2, "0");
+  return `${hexColor}${a}`;
 }

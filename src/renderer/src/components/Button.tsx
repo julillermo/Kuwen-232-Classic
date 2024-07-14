@@ -10,9 +10,6 @@ type ButtonProps = {
 };
 
 export default function Button({ text, type }: ButtonProps) {
-  console.log(themeColors.primary);
-  console.log(darkenHexColor(themeColors.primary, 50));
-
   return (
     <button
       type={type}
@@ -28,11 +25,11 @@ export default function Button({ text, type }: ButtonProps) {
         backgroundColor: themeColors.primary,
 
         "&:hover": {
-          backgroundColor: lightenHexColor(themeColors.primary, 10),
+          backgroundColor: lightenHexColor(themeColors.primary, 0.1),
         },
 
         "&:active": {
-          backgroundColor: darkenHexColor(themeColors.primary, 10),
+          backgroundColor: darkenHexColor(themeColors.primary, 0.1),
         },
       }}
     >

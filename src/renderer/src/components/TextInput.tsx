@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { themeColors } from "../assets/themes/themeColors";
 import { CustomCSSObject } from "../types/emotion";
-import { darkenHexColor } from "../utils/color";
+import { darkenHexColor, lightenHexColor } from "../utils/color";
 
 type TextInput = {
   disabled?: boolean;
@@ -24,9 +24,9 @@ export default function TextInput({
       disabled={disabled}
       required={required}
       css={[
-        showHover && {
+        {
           "&:hover": {
-            outline: `1px solid ${darkenHexColor(themeColors.secondary, 10)}`,
+            outline: `1px solid ${darkenHexColor(themeColors.secondary, 0.1)}`,
           },
         },
         {
@@ -52,7 +52,7 @@ export default function TextInput({
 
           "&:disabled": {
             outline: "none",
-            backgroundColor: darkenHexColor(themeColors.foreground, 60),
+            backgroundColor: darkenHexColor(themeColors.foreground, 0.3),
           },
 
           ...customCSS,
