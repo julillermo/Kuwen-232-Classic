@@ -30,7 +30,7 @@ export function lightenHexColor(hexColor, amount = 0.1) {
   return `#${r}${g}${b}`;
 }
 
-export function setHexTransparency(hexColor, amount = 1) {
+export function setHexTransparency(hexColor, amount = 0.9) {
   const a: number | string = Math.min(255, Math.round(255 * amount))
     .toString(16)
     .padStart(2, "0");

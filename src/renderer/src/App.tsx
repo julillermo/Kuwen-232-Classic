@@ -1,11 +1,15 @@
 // The following line is needed to use EmotionCSS like I do with work
 /** @jsxImportSource @emotion/react */
 import AppTitle from "./components/AppTitle";
+import Button from "./components/Button";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import Button from "./components/Button";
+import SplitButton from "./components/SplitButton";
+import { useState } from "react";
 
 function App() {
+  const [epubInputType, setEpubInputType] = useState("file");
+
   return (
     <div
       css={{
@@ -55,7 +59,9 @@ function App() {
             css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <Typography color={"secondary"}>
-              Path to .epub file | epub folder:
+              {/* &emsp; */}
+              Path to{" "}
+              <u>{epubInputType == "file" ? ".epub file" : "epub folder"}</u>
             </Typography>
             <div
               css={{
@@ -66,15 +72,14 @@ function App() {
               }}
             >
               <TextInput showHover={true} customCSS={{ flexGrow: 1 }} />
-              <select
-                css={{
-                  fontFamily: "Comic Neue",
-                }}
-              >
-                <option value="epub-file">.epub file</option>
-                <option value="epub-folder">epub folder</option>
-              </select>
-              <Button text="Set Path" />
+              <SplitButton
+                buttonText="Set Path"
+                dropDownOptions={[
+                  { ".epub file": "file" },
+                  { "epub folder": "folder" },
+                ]}
+                setSelectedOption={setEpubInputType}
+              />
             </div>
           </div>
           <div
@@ -82,6 +87,7 @@ function App() {
             css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <Typography color={"secondary"}>
+              {/* &emsp; */}
               Path to Voice Recording audio file:
             </Typography>
             <div
@@ -101,7 +107,8 @@ function App() {
             css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
             <Typography color={"secondary"}>
-              Path to Time labels .txt file:{" "}
+              {/* &emsp; */}
+              Path to Time labels .txt file:
             </Typography>
             <div>
               <div

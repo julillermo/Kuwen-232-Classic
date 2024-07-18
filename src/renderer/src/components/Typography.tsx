@@ -18,6 +18,9 @@ type TypographyProps = {
 export default function Typography({ color, children }: TypographyProps) {
   let textColor;
   switch (color) {
+    case "background":
+      textColor = themeColors.background;
+      break;
     case "secondary":
       textColor = themeColors.secondary;
       break;

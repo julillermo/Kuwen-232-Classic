@@ -1,6 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { themeColors } from "../assets/themes/themeColors";
-import { darkenHexColor, lightenHexColor } from "../utils/color";
+import {
+  darkenHexColor,
+  lightenHexColor,
+  setHexTransparency,
+} from "../utils/color";
 
 type ButtonProps = {
   text: string;
@@ -9,7 +13,7 @@ type ButtonProps = {
   // suffix?: ReactNode;
 };
 
-export default function Button({ text, type }: ButtonProps) {
+export default function Button({ text, type = "button" }: ButtonProps) {
   return (
     <button
       type={type}
@@ -24,8 +28,13 @@ export default function Button({ text, type }: ButtonProps) {
         border: "none",
         backgroundColor: themeColors.primary,
 
+        cursor: "pointer",
         "&:hover": {
           backgroundColor: lightenHexColor(themeColors.primary, 0.1),
+          boxShadow: `0px 0px 6px 0px ${setHexTransparency(
+            themeColors.primary,
+            0.7
+          )}`,
         },
 
         "&:active": {
