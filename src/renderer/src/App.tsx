@@ -1,14 +1,29 @@
 // The following line is needed to use EmotionCSS like I do with work
 /** @jsxImportSource @emotion/react */
+import { useEffect, useState } from "react";
 import AppTitle from "./components/AppTitle";
 import Button from "./components/Button";
+import HorizontalRadioSelect, {
+  RadioOption,
+} from "./components/HorizontalRadioSelect";
+import SplitButton from "./components/SplitButton";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import SplitButton from "./components/SplitButton";
-import { useState } from "react";
 
 function App() {
+  const defaultTimeLabelInputMethod = { ".text file": "file" };
+
   const [epubInputType, setEpubInputType] = useState("file");
+  const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
+    defaultTimeLabelInputMethod
+  );
+  const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
+
+  useEffect(() => {
+    Object.values(timeLabelInputMethod)[0] == "manual"
+      ? setDisabledTxtTimeLabelUI(true)
+      : setDisabledTxtTimeLabelUI(false);
+  }, [timeLabelInputMethod]);
 
   return (
     <div
@@ -61,7 +76,7 @@ function App() {
             <Typography color={"secondary"}>
               {/* &emsp; */}
               Path to{" "}
-              <u>{epubInputType == "file" ? ".epub file" : "epub folder"}</u>
+              <u>{epubInputType == "file" ? ".epub file" : "epub folder"}</u>:
             </Typography>
             <div
               css={{
@@ -78,7 +93,7 @@ function App() {
                   { ".epub file": "file" },
                   { "epub folder": "folder" },
                 ]}
-                setSelectedOption={setEpubInputType}
+                setSelectedValue={setEpubInputType}
               />
             </div>
           </div>
@@ -88,7 +103,7 @@ function App() {
           >
             <Typography color={"secondary"}>
               {/* &emsp; */}
-              Path to Voice Recording audio file:
+              Path to voice recording <u>audio file</u>:
             </Typography>
             <div
               css={{
@@ -106,11 +121,17 @@ function App() {
             id="time-labels-group"
             css={{ display: "flex", flexDirection: "column", gap: "6px" }}
           >
-            <Typography color={"secondary"}>
+            <Typography disabled={disabledTxtTimeLabelUI} color={"secondary"}>
               {/* &emsp; */}
-              Path to Time labels .txt file:
+              Path to time labels <u>.txt file</u>:
             </Typography>
-            <div>
+            <div
+              css={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "24px",
+              }}
+            >
               <div
                 id="time-labels-file-input"
                 css={{
@@ -120,12 +141,20 @@ function App() {
                   gap: "20px",
                 }}
               >
-                <TextInput showHover={true} />
-                <Button text="Set Path" />
-                <Button text="Manual Input" />
+                <TextInput disabled={disabledTxtTimeLabelUI} showHover={true} />
+                <HorizontalRadioSelect
+                  defaultOption={defaultTimeLabelInputMethod}
+                  radioOptions={[
+                    { ".text file": "file" },
+                    { "manual input": "manual" },
+                  ]}
+                  selectedOption={timeLabelInputMethod}
+                  setSelectedOption={setTimeLabelInputMethod}
+                />
+                <Button disabled={disabledTxtTimeLabelUI} text="Set Path" />
               </div>
               <div id="time-labels-manual-input">
-                <textarea />
+                {disabledTxtTimeLabelUI && <textarea />}
               </div>
             </div>
           </div>
@@ -142,7 +171,7 @@ function App() {
             <Button text="Resync" />
             <Button text="Match nav.html" />
             <Button type="reset" text="Clear" />
-            <Button type="submit" text="Process" />
+            <Button text="Process" />
           </div>
         </form>
       </div>

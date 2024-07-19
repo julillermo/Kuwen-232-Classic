@@ -9,14 +9,20 @@ import {
 type ButtonProps = {
   text: string;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
   // prefix?: ReactNode;
   // suffix?: ReactNode;
 };
 
-export default function Button({ text, type = "button" }: ButtonProps) {
+export default function Button({
+  text,
+  type = "button",
+  disabled = false,
+}: ButtonProps) {
   return (
     <button
       type={type}
+      disabled={disabled}
       css={{
         fontFamily: "Comic Neue",
         textWrap: "nowrap",
@@ -39,6 +45,13 @@ export default function Button({ text, type = "button" }: ButtonProps) {
 
         "&:active": {
           backgroundColor: darkenHexColor(themeColors.primary, 0.1),
+        },
+
+        "&:disabled": {
+          backgroundColor: setHexTransparency(themeColors.primary, 0.5),
+          boxShadow: "none",
+          cursor: "auto",
+          color: setHexTransparency(themeColors.background, 0.5),
         },
       }}
     >

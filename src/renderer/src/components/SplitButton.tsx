@@ -10,14 +10,14 @@ import { useState } from "react";
 import Typography from "./Typography";
 
 type DropDownOption = {
-  [key: string]: string | number; // {displayText: dropDown value}
+  [key: string]: string | number; // {displayText: dropDown_value}
 };
 
 type SplitButtonProps = {
   buttonText: string;
   type?: "button" | "submit" | "reset";
-  dropDownOptions?: DropDownOption[]; // [{displayText: dropDown value}, ...]
-  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+  dropDownOptions: DropDownOption[]; // [{displayText: dropDown_value}, ...]
+  setSelectedValue: React.Dispatch<React.SetStateAction<string>>;
   // prefix?: ReactNode;
   // suffix?: ReactNode;
 };
@@ -26,7 +26,7 @@ export default function SplitButton({
   buttonText,
   type = "button",
   dropDownOptions,
-  setSelectedOption,
+  setSelectedValue,
 }: SplitButtonProps) {
   const [optionsVisibility, setOptionsVisibility] = useState<boolean>(false);
 
@@ -43,7 +43,7 @@ export default function SplitButton({
   }
 
   function handleOptionSelect(optionValue) {
-    setSelectedOption(optionValue);
+    setSelectedValue(optionValue);
     setOptionsVisibility(false);
   }
 
@@ -161,34 +161,30 @@ export default function SplitButton({
             marginTop: "2px",
           }}
         >
-          {dropDownOptions &&
-            dropDownOptions.map((option) => {
-              return (
-                <div
-                  onClick={() => handleOptionSelect(Object.values(option)[0])}
-                  css={{
-                    padding: "4px",
+          {dropDownOptions.map((option) => {
+            return (
+              <div
+                onClick={() => handleOptionSelect(Object.values(option)[0])}
+                css={{
+                  padding: "4px",
 
-                    borderRadius: getOptionsHoverBorderRadius({
-                      index: dropDownOptions.indexOf(option),
-                      indexCount: dropDownOptions.length - 1,
-                    }),
+                  borderRadius: getOptionsHoverBorderRadius({
+                    index: dropDownOptions.indexOf(option),
+                    indexCount: dropDownOptions.length - 1,
+                  }),
 
-                    cursor: "pointer",
-                    "&:hover": {
-                      backgroundColor: lightenHexColor(
-                        themeColors.primary,
-                        0.1
-                      ),
-                    },
-                  }}
-                >
-                  <Typography color="background">
-                    {Object.keys(option)[0]}
-                  </Typography>
-                </div>
-              );
-            })}
+                  cursor: "pointer",
+                  "&:hover": {
+                    backgroundColor: lightenHexColor(themeColors.primary, 0.1),
+                  },
+                }}
+              >
+                <Typography color="background">
+                  {Object.keys(option)[0]}
+                </Typography>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

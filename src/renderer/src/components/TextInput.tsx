@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { themeColors } from "../assets/themes/themeColors";
 import { CustomCSSObject } from "../types/emotion";
-import { darkenHexColor, setHexTransparency } from "../utils/color";
+import { setHexTransparency } from "../utils/color";
 
 type TextInput = {
   disabled?: boolean;
@@ -45,17 +45,19 @@ export default function TextInput({
           placeholder: "test",
 
           apperance: "auto",
-          boxShadow: "none",
+
           border: "none",
           backgroundColor: themeColors.foreground,
 
           "&:focus": {
             outline: `2px solid ${themeColors.secondary}`,
+            boxShadow: "none",
           },
 
           "&:disabled": {
             outline: "none",
-            backgroundColor: darkenHexColor(themeColors.foreground, 0.3),
+            boxShadow: "none",
+            backgroundColor: setHexTransparency(themeColors.foreground, 0.5),
           },
 
           ...customCSS,

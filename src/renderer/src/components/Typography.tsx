@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { ReactNode } from "react";
 import { themeColors } from "../assets/themes/themeColors";
+import { setHexTransparency } from "../utils/color";
 
 type TypographyProps = {
   color?:
@@ -12,10 +13,15 @@ type TypographyProps = {
     | "secondary"
     | "alert"
     | "alt";
+  disabled?: boolean;
   children: ReactNode;
 };
 
-export default function Typography({ color, children }: TypographyProps) {
+export default function Typography({
+  color,
+  disabled = false,
+  children,
+}: TypographyProps) {
   let textColor;
   switch (color) {
     case "background":
@@ -33,13 +39,18 @@ export default function Typography({ color, children }: TypographyProps) {
 
   return (
     <p
-      css={{
-        margin: 0,
-        color: textColor,
+      css={[
+        {
+          margin: 0,
+          color: textColor,
 
-        fontSize: "16px",
-        fontWeight: "normal",
-      }}
+          fontSize: "16px",
+          fontWeight: "normal",
+        },
+        disabled && {
+          color: setHexTransparency(textColor, 0.5),
+        },
+      ]}
     >
       {children}
     </p>
