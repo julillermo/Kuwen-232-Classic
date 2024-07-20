@@ -1,29 +1,37 @@
 // The following line is needed to use EmotionCSS like I do with work
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
+import { themeColors } from "./assets/themes/themeColors";
 import AppTitle from "./components/AppTitle";
 import Button from "./components/Button";
 import HorizontalRadioSelect, {
   RadioOption,
 } from "./components/HorizontalRadioSelect";
 import SplitButton from "./components/SplitButton";
+import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
+import { darkenHexColor } from "./utils/color";
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
 
-  const [epubInputType, setEpubInputType] = useState("file");
+  const [epubInputType, setEpubInputType] = useState("folder");
   const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
     defaultTimeLabelInputMethod
   );
   const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
+  const [showAddFnToggle, setShowAddFnToggle] = useState(false);
 
   useEffect(() => {
     Object.values(timeLabelInputMethod)[0] == "manual"
       ? setDisabledTxtTimeLabelUI(true)
       : setDisabledTxtTimeLabelUI(false);
   }, [timeLabelInputMethod]);
+
+  function handleAddFnToggle() {
+    showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
+  }
 
   return (
     <div
@@ -154,7 +162,7 @@ function App() {
                 <Button disabled={disabledTxtTimeLabelUI} text="Set Path" />
               </div>
               <div id="time-labels-manual-input">
-                {disabledTxtTimeLabelUI && <textarea />}
+                <TextArea disabled={!disabledTxtTimeLabelUI} />
               </div>
             </div>
           </div>
@@ -163,15 +171,51 @@ function App() {
             css={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
+              alignItems: "center",
               gap: "20px",
             }}
           >
-            <p>Show/Hide Additional functions</p>
-            <Button text="Resync" />
-            <Button text="Match nav.html" />
-            <Button type="reset" text="Clear" />
-            <Button text="Process" />
+            <div
+              id="additional-functions"
+              css={{
+                display: "flex",
+                flexDirection: "row",
+                flexGrow: 1,
+                justifyContent: "flex-end",
+                alignItems: "center",
+                gap: "20px",
+              }}
+            >
+              <Typography onClick={handleAddFnToggle}>
+                {showAddFnToggle ? "Hide" : "Show"} Additional Functions
+              </Typography>
+              {showAddFnToggle && (
+                <>
+                  <Button text="Resync" />
+                  <Button text="Match nav.html" />
+                </>
+              )}
+            </div>
+            <div
+              css={{
+                height: "25px",
+                width: "1px",
+                backgroundColor: darkenHexColor(themeColors.foreground, 0.1),
+              }}
+            ></div>
+            <div
+              id="main-process-functions"
+              css={{
+                display: "flex",
+                flexDirection: "row",
+                justifySelf: "flex-end",
+                gap: "20px",
+              }}
+            >
+              <Button type="reset" text="Clear" />
+              <Button text="Process" />
+            </div>
           </div>
         </form>
       </div>

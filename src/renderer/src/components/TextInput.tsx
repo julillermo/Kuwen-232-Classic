@@ -35,7 +35,6 @@ export default function TextInput({
         {
           height: "24px",
           width: "100%",
-          resize: "vertical",
           borderRadius: "12px",
           padding: "8px 10px",
 

@@ -14,12 +14,14 @@ type TypographyProps = {
     | "alert"
     | "alt";
   disabled?: boolean;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   children: ReactNode;
 };
 
 export default function Typography({
   color,
   disabled = false,
+  onClick,
   children,
 }: TypographyProps) {
   let textColor;
@@ -39,6 +41,7 @@ export default function Typography({
 
   return (
     <p
+      onClick={onClick}
       css={[
         {
           margin: 0,
@@ -47,8 +50,15 @@ export default function Typography({
           fontSize: "16px",
           fontWeight: "normal",
         },
+        onClick != null && {
+          "&:hover": {
+            textDecoration: "underline",
+          },
+          cursor: "pointer",
+        },
         disabled && {
           color: setHexTransparency(textColor, 0.5),
+          cursor: "none",
         },
       ]}
     >
