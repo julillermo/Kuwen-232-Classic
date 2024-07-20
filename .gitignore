@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # electron-vitew
-out
+node_modules
