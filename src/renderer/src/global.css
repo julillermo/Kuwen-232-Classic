@@ -1,0 +1,18 @@
+@font-face {
+  font-family: "Comic Neue";
+  src: url("./assets/fonts/Comic_Neue/ComicNeue-Regular.ttf");
+}
+
+html, body{
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+
+  background-color: #282c34;
+  color: #abb2bf;
+
+  font-family: "Comic Neue";
+}
+
+input, textarea {
+  font-family: "Comic Neue";
+}
