@@ -10,5 +10,7 @@
   ],
   "compilerOptions": {
     "types": ["electron-vite/node"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "@emotion/react"
   }
 }

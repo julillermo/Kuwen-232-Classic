@@ -1,6 +1,6 @@
 @font-face {
-  font-famly: "Comic Neue";
-  src: url("./assets/fonts/Comic Neue/ComicNeue-Regular.ttf");
+  font-family: "Comic Neue";
+  src: url("./assets/fonts/Comic_Neue/ComicNeue-Regular.ttf");
 }
 
 html, body{
@@ -10,5 +10,9 @@ html, body{
   background-color: #282c34;
   color: #abb2bf;
 
+  font-family: "Comic Neue";
+}
+
+input, textarea {
   font-family: "Comic Neue";
 }
