@@ -1,8 +1,15 @@
 {
-  "name": "kuwentho-classic",
+  "name": "kuwen-232-classic",
   "private": true,
   "version": "0.0.0",
+  "author": {
+    "name": "Julius Ray Guillermo"
+  },
   "main": "./dist/main/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julillermo/Kuwen-232-Classic.git"
+  },
   "scripts": {
     "copyTheme": "node ./src/renderer/src/assets/themes/loadHTMLStyling.js",
     "devTheme": "npm run copyTheme && electron-vite dev -w",
@@ -14,14 +21,15 @@
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "cheerio": "^1.0.0-rc.12",
-    "epubjs": "^0.3.93",
+    "file-type": "^19.2.0",
+    "jszip": "^3.10.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@types/node": "^20.14.9",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
     "@vitejs/plugin-react-swc": "^3.5.0",
@@ -33,5 +41,9 @@
     "eslint-plugin-react-refresh": "^0.4.7",
     "typescript": "^5.2.2",
     "vite": "^5.3.1"
-  }
+  },
+  "keywords": [
+    "epub"
+  ],
+  "license": "MIT"
 }

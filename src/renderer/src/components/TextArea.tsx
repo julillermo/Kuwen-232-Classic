@@ -20,7 +20,7 @@ export default function TextArea({ disabled }: TextAreaProps) {
           {
             width: "100%",
             minWidth: "740px",
-            height: "135px",
+            height: "160px",
 
             outline: "none",
 
