@@ -1,37 +1,59 @@
 {
-  "name": "kuwentho-classic",
   "private": true,
-  "version": "0.0.0",
-  "main": "./dist/main/main.js",
+  "name": "kuwen-232-remake",
+  "productName": "kuwen-232-remake",
+  "version": "0.2.0",
+  "description": "An Electron.js port of my Python automation script to synchronize epub text with audio recordings",
+  "main": ".vite/build/main.js",
   "scripts": {
-    "copyTheme": "node ./src/renderer/src/assets/themes/loadHTMLStyling.js",
-    "devTheme": "npm run copyTheme && electron-vite dev -w",
-    "dev": "electron-vite dev -w",
-    "build": "electron-vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "electron-vite preview"
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "lint": "eslint --ext .ts,.tsx ."
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
+    "@emotion/react": "^11.13.0",
     "cheerio": "^1.0.0-rc.12",
-    "epubjs": "^0.3.93",
+    "electron-squirrel-startup": "^1.0.1",
+    "file-type": "^19.3.0",
+    "jszip": "^3.10.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/plugin-vite": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@types/node": "^20.14.9",
-    "@typescript-eslint/eslint-plugin": "^7.13.1",
-    "@typescript-eslint/parser": "^7.13.1",
-    "@vitejs/plugin-react-swc": "^3.5.0",
-    "electron": "^31.1.0",
-    "electron-vite": "^2.3.0",
+    "@typescript-eslint/eslint-plugin": "^5.62.0",
+    "@typescript-eslint/parser": "^5.62.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "electron": "31.2.1",
     "eslint": "^8.57.0",
-    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.7",
-    "typescript": "^5.2.2",
-    "vite": "^5.3.1"
-  }
+    "eslint-plugin-react-refresh": "^0.4.9",
+    "ts-node": "^10.9.2",
+    "typescript": "~4.5.4",
+    "vite": "^5.3.4"
+  },
+  "keywords": [
+    "epub"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/julillermo/Kuwen-232-Classic.git"
+  },
+  "author": {
+    "name": "Julius Ray Guillermo"
+  },
+  "license": "MIT"
 }

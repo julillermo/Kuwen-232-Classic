@@ -1,4 +1,3 @@
-// The following line is needed to use EmotionCSS like I do with work
 /** @jsxImportSource @emotion/react */
 import { useEffect, useState } from "react";
 import { themeColors } from "./assets/themes/themeColors";
