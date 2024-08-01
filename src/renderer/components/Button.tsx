@@ -8,6 +8,7 @@ import {
 
 type ButtonProps = {
   text: string;
+  onClick: () => void;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   // prefix?: ReactNode;
@@ -16,11 +17,13 @@ type ButtonProps = {
 
 export default function Button({
   text,
+  onClick,
   type = "button",
   disabled = false,
 }: ButtonProps) {
   return (
     <button
+      onClick={onClick}
       type={type}
       disabled={disabled}
       css={{

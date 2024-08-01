@@ -4,6 +4,7 @@ import { CustomCSSObject } from "../types/emotion";
 import { setHexTransparency } from "../utils/color";
 
 type TextInput = {
+  value?: string;
   disabled?: boolean;
   required?: boolean;
   showHover?: boolean;
@@ -12,6 +13,7 @@ type TextInput = {
 };
 
 export default function TextInput({
+  value,
   disabled,
   required,
   showHover = false,
@@ -20,6 +22,7 @@ export default function TextInput({
 }: TextInput) {
   return (
     <input
+      value={value}
       type="text"
       disabled={disabled}
       required={required}

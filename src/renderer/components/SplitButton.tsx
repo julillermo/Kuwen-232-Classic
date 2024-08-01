@@ -10,11 +10,12 @@ import { useState } from "react";
 import Typography from "./Typography";
 
 type DropDownOption = {
-  [key: string]: string | number; // {displayText: dropDown_value}
+  [key: string]: string; // {displayText: dropDown_value}
 };
 
 type SplitButtonProps = {
   buttonText: string;
+  onClick: () => void;
   type?: "button" | "submit" | "reset";
   dropDownOptions: DropDownOption[]; // [{displayText: dropDown_value}, ...]
   setSelectedValue: React.Dispatch<React.SetStateAction<string>>;
@@ -24,6 +25,7 @@ type SplitButtonProps = {
 
 export default function SplitButton({
   buttonText,
+  onClick,
   type = "button",
   dropDownOptions,
   setSelectedValue,
@@ -42,7 +44,7 @@ export default function SplitButton({
     }
   }
 
-  function handleOptionSelect(optionValue) {
+  function handleOptionSelect(optionValue: string) {
     setSelectedValue(optionValue);
     setOptionsVisibility(false);
   }
@@ -68,6 +70,7 @@ export default function SplitButton({
         }}
       >
         <button
+          onClick={onClick}
           type={type}
           css={{
             fontFamily: "Comic Neue",
@@ -191,7 +194,13 @@ export default function SplitButton({
   );
 }
 
-function getOptionsHoverBorderRadius({ index, indexCount }) {
+function getOptionsHoverBorderRadius({
+  index,
+  indexCount,
+}: {
+  index: number;
+  indexCount: number;
+}) {
   switch (index) {
     case 0:
       return "12px 0px 0px 0px";

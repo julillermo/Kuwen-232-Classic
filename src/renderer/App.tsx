@@ -10,17 +10,23 @@ import SplitButton from "./components/SplitButton";
 import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
+import { fileSystemIPC, versionsIPC } from "./types/globalNamesAddition";
 import { darkenHexColor } from "./utils/color";
+const { fileSystem } = window;
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
 
-  const [epubInputType, setEpubInputType] = useState("folder");
+  const [epubInputType, setEpubInputType] = useState<string>("folder");
   const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
     defaultTimeLabelInputMethod
   );
   const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
   const [showAddFnToggle, setShowAddFnToggle] = useState(false);
+
+  const [epubPath, setEpubPath] = useState("");
+  const [audioFilePath, setAudioFilePath] = useState("");
+  const [timeLabelsFilePath, SetTimeLabelsFilePath] = useState("");
 
   useEffect(() => {
     Object.values(timeLabelInputMethod)[0] == "manual"
@@ -30,6 +36,24 @@ function App() {
 
   function handleAddFnToggle() {
     showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
+  }
+
+  async function handleSetEpubPath() {
+    const epubPath = await fileSystem.openFile();
+    setEpubPath(epubPath);
+  }
+  async function handleSetAudioFilePath() {
+    const audioFilePath = await fileSystem.openFile();
+    setAudioFilePath(audioFilePath);
+  }
+  async function handleSetTimeLabelsFilePath() {
+    const timeLabelsFilePath = await fileSystem.openFile();
+    SetTimeLabelsFilePath(timeLabelsFilePath);
+  }
+  function clearFilePaths() {
+    setEpubPath("");
+    setAudioFilePath("");
+    SetTimeLabelsFilePath("");
   }
 
   return (
@@ -61,7 +85,12 @@ function App() {
           }}
         >
           <p>
-            <a href="https://github.com/julillermo/Kuwen-232-Classic">Github</a>
+            <a
+              href="https://github.com/julillermo/Kuwen-232-Classic"
+              target="_blank"
+            >
+              Github
+            </a>
           </p>
           <p>Attributions</p>
           <p>About</p>
@@ -93,8 +122,13 @@ function App() {
                 gap: "20px",
               }}
             >
-              <TextInput showHover={true} customCSS={{ flexGrow: 1 }} />
+              <TextInput
+                value={epubPath}
+                showHover={true}
+                customCSS={{ flexGrow: 1 }}
+              />
               <SplitButton
+                onClick={handleSetEpubPath}
                 buttonText="Set Path"
                 dropDownOptions={[
                   { ".epub file": "file" },
@@ -120,8 +154,8 @@ function App() {
                 gap: "20px",
               }}
             >
-              <TextInput showHover={true} />
-              <Button text="Set Path" />
+              <TextInput value={audioFilePath} showHover={true} />
+              <Button text="Set Path" onClick={handleSetAudioFilePath} />
             </div>
           </div>
           <div
@@ -130,7 +164,7 @@ function App() {
           >
             <Typography disabled={disabledTxtTimeLabelUI} color={"secondary"}>
               {/* &emsp; */}
-              Path to time labels <u>.txt file</u>:
+              Path to <u>time labels .txt file</u>:
             </Typography>
             <div
               css={{
@@ -148,7 +182,11 @@ function App() {
                   gap: "20px",
                 }}
               >
-                <TextInput disabled={disabledTxtTimeLabelUI} showHover={true} />
+                <TextInput
+                  value={timeLabelsFilePath}
+                  disabled={disabledTxtTimeLabelUI}
+                  showHover={true}
+                />
                 <HorizontalRadioSelect
                   defaultOption={defaultTimeLabelInputMethod}
                   radioOptions={[
@@ -158,7 +196,11 @@ function App() {
                   selectedOption={timeLabelInputMethod}
                   setSelectedOption={setTimeLabelInputMethod}
                 />
-                <Button disabled={disabledTxtTimeLabelUI} text="Set Path" />
+                <Button
+                  onClick={handleSetTimeLabelsFilePath}
+                  disabled={disabledTxtTimeLabelUI}
+                  text="Set Path"
+                />
               </div>
               <div id="time-labels-manual-input">
                 <TextArea disabled={!disabledTxtTimeLabelUI} />
@@ -212,7 +254,7 @@ function App() {
                 gap: "20px",
               }}
             >
-              <Button type="reset" text="Clear" />
+              <Button onClick={clearFilePaths} type="reset" text="Clear" />
               <Button text="Process" />
             </div>
           </div>
@@ -223,3 +265,11 @@ function App() {
 }
 
 export default App;
+
+// Adding typing to the added objects in the global names
+declare global {
+  interface Window {
+    versions: versionsIPC;
+    fileSystem: fileSystemIPC;
+  }
+}

@@ -1,5 +1,9 @@
-import { app, BrowserWindow } from "electron";
-import path from "path";
+import { app, BrowserWindow, ipcMain } from "electron";
+import path from "node:path";
+import { handleFileOpen } from "./fileSystem";
+
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
+declare const MAIN_WINDOW_VITE_NAME: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -12,9 +16,18 @@ const createMainWindow = () => {
   // __dirname is ".vite/build"
   const mainWindow = new BrowserWindow({
     width: 800,
-    height: 600,
+    height: 600 + 25, // added 25px to account for the global menu bar
     webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
+      preload: path.join(__dirname, "./preload.js"),
+
+      // Context Isolation means that preload scripts are isolated from
+      // the renderer's main world to avoid leaking any privileged APIs
+      // into your web content's code.
+      //
+      // This means that the window object that your preload script has
+      // access to is actually a different object than the website would
+      // have access to.
+      contextIsolation: true,
     },
   });
 
@@ -22,10 +35,19 @@ const createMainWindow = () => {
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
     // MAIN_WINDOW_VITE_DEV_SERVER_URL is the localhost
     mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+    console.log(
+      `🛜  Loaded through localhost ${MAIN_WINDOW_VITE_DEV_SERVER_URL}`
+    );
   } else {
     // MAIN_WINDOW_VITE_NAME is "main_window"
     mainWindow.loadFile(
       path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`)
+    );
+    console.log(
+      `📁  Loaded through a local file:  ${path.join(
+        __dirname,
+        `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`
+      )}`
     );
   }
 
@@ -39,7 +61,13 @@ const createMainWindow = () => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createMainWindow);
+app.on("ready", () => {
+  // IPC communicaition
+  ipcMain.handle("dialog:openFile", handleFileOpen);
+
+  // Start main window
+  createMainWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
