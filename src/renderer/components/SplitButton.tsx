@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
+import { useState } from "react";
+import DownArrowIcon from "../assets/icons/DownArrowIcon";
 import { themeColors } from "../assets/themes/themeColors";
 import {
   darkenHexColor,
   lightenHexColor,
   setHexTransparency,
 } from "../utils/color";
-import DownArrowIcon from "../assets/icons/DownArrowIcon";
-import { useState } from "react";
 import Typography from "./Typography";
 
 type DropDownOption = {
@@ -30,23 +30,22 @@ export default function SplitButton({
   dropDownOptions,
   setSelectedValue,
 }: SplitButtonProps) {
-  const [optionsVisibility, setOptionsVisibility] = useState<boolean>(false);
+  const [showOptionsTray, setShowOptionsTray] = useState<boolean>(false);
 
   function toggleShowOptions() {
-    console.log("entered here");
-    switch (optionsVisibility) {
+    switch (showOptionsTray) {
       case false:
-        setOptionsVisibility(true);
+        setShowOptionsTray(true);
         break;
       default:
-        setOptionsVisibility(false);
+        setShowOptionsTray(false);
         break;
     }
   }
 
   function handleOptionSelect(optionValue: string) {
     setSelectedValue(optionValue);
-    setOptionsVisibility(false);
+    setShowOptionsTray(false);
   }
 
   return (
@@ -119,7 +118,7 @@ export default function SplitButton({
             fontFamily: "Comic Neue",
             textWrap: "nowrap",
 
-            borderRadius: optionsVisibility
+            borderRadius: showOptionsTray
               ? "0px 12px 0px 0px"
               : "0px 12px 12px 0px",
             padding: "12px 14px",
@@ -141,7 +140,7 @@ export default function SplitButton({
           <DownArrowIcon height={12} width={12} />
         </button>
       </div>
-      {optionsVisibility && (
+      {showOptionsTray && (
         <div
           css={{
             display: "flex",
@@ -167,7 +166,10 @@ export default function SplitButton({
           {dropDownOptions.map((option) => {
             return (
               <div
-                onClick={() => handleOptionSelect(Object.values(option)[0])}
+                key={Object.keys(option)[0]}
+                onClick={() => {
+                  handleOptionSelect(Object.values(option)[0]);
+                }}
                 css={{
                   padding: "4px",
 

@@ -4,7 +4,8 @@ import { CustomCSSObject } from "../types/emotion";
 import { setHexTransparency } from "../utils/color";
 
 type TextInput = {
-  value?: string;
+  value: string;
+  onChange: React.Dispatch<React.SetStateAction<string>>;
   disabled?: boolean;
   required?: boolean;
   showHover?: boolean;
@@ -14,6 +15,7 @@ type TextInput = {
 
 export default function TextInput({
   value,
+  onChange,
   disabled,
   required,
   showHover = false,
@@ -23,6 +25,9 @@ export default function TextInput({
   return (
     <input
       value={value}
+      onChange={(e) => {
+        onChange(e.target.value);
+      }}
       type="text"
       disabled={disabled}
       required={required}
@@ -57,6 +62,7 @@ export default function TextInput({
           },
 
           "&:disabled": {
+            "user-select": "none",
             outline: "none",
             boxShadow: "none",
             backgroundColor: setHexTransparency(themeColors.foreground, 0.5),

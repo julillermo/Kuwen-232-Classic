@@ -56,16 +56,15 @@ const createMainWindow = () => {
 
   // Toggle resizable window (comment in/out)
   // mainWindow.setResizable(false);
+
+  // IPC communicaition
+  ipcMain.handle("dialog:openFile", handleFileOpen);
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", () => {
-  // IPC communicaition
-  ipcMain.handle("dialog:openFile", handleFileOpen);
-
-  // Start main window
   createMainWindow();
 });
 

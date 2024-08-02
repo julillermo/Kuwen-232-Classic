@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { themeColors } from "./assets/themes/themeColors";
 import AppTitle from "./components/AppTitle";
 import Button from "./components/Button";
@@ -26,15 +26,29 @@ function App() {
 
   const [epubPath, setEpubPath] = useState("");
   const [audioFilePath, setAudioFilePath] = useState("");
+
   const [timeLabelsFilePath, SetTimeLabelsFilePath] = useState("");
+  const timeLabelsFilePathRef = useRef("");
+  const [manualTimeLabelsTxt, setManualTimeLabelsTxt] = useState("");
+  const manualTimeLabelsRef = useRef("");
 
   useEffect(() => {
-    Object.values(timeLabelInputMethod)[0] == "manual"
-      ? setDisabledTxtTimeLabelUI(true)
-      : setDisabledTxtTimeLabelUI(false);
+    if (Object.values(timeLabelInputMethod)[0] == "manual") {
+      setDisabledTxtTimeLabelUI(true);
+      timeLabelsFilePathRef.current = timeLabelsFilePath;
+
+      SetTimeLabelsFilePath("");
+      setManualTimeLabelsTxt(manualTimeLabelsRef.current);
+    } else if (Object.values(timeLabelInputMethod)[0] == "file") {
+      setDisabledTxtTimeLabelUI(false);
+      manualTimeLabelsRef.current = manualTimeLabelsTxt;
+
+      setManualTimeLabelsTxt("");
+      SetTimeLabelsFilePath(timeLabelsFilePathRef.current);
+    }
   }, [timeLabelInputMethod]);
 
-  function handleAddFnToggle() {
+  function handleShowAddFnToggle() {
     showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
   }
 
@@ -54,6 +68,9 @@ function App() {
     setEpubPath("");
     setAudioFilePath("");
     SetTimeLabelsFilePath("");
+    setManualTimeLabelsTxt("");
+    timeLabelsFilePathRef.current = "";
+    manualTimeLabelsRef.current = "";
   }
 
   return (
@@ -124,6 +141,7 @@ function App() {
             >
               <TextInput
                 value={epubPath}
+                onChange={setEpubPath}
                 showHover={true}
                 customCSS={{ flexGrow: 1 }}
               />
@@ -154,7 +172,11 @@ function App() {
                 gap: "20px",
               }}
             >
-              <TextInput value={audioFilePath} showHover={true} />
+              <TextInput
+                value={audioFilePath}
+                onChange={setAudioFilePath}
+                showHover={true}
+              />
               <Button text="Set Path" onClick={handleSetAudioFilePath} />
             </div>
           </div>
@@ -184,6 +206,7 @@ function App() {
               >
                 <TextInput
                   value={timeLabelsFilePath}
+                  onChange={SetTimeLabelsFilePath}
                   disabled={disabledTxtTimeLabelUI}
                   showHover={true}
                 />
@@ -203,7 +226,11 @@ function App() {
                 />
               </div>
               <div id="time-labels-manual-input">
-                <TextArea disabled={!disabledTxtTimeLabelUI} />
+                <TextArea
+                  value={manualTimeLabelsTxt}
+                  onChange={setManualTimeLabelsTxt}
+                  disabled={!disabledTxtTimeLabelUI}
+                />
               </div>
             </div>
           </div>
@@ -228,7 +255,7 @@ function App() {
                 gap: "20px",
               }}
             >
-              <Typography onClick={handleAddFnToggle}>
+              <Typography onClick={handleShowAddFnToggle}>
                 {showAddFnToggle ? "Hide" : "Show"} Additional Functions
               </Typography>
               {showAddFnToggle && (

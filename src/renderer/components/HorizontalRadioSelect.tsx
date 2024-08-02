@@ -22,8 +22,6 @@ export default function HorizontalRadioSelect({
   selectedOption,
   setSelectedOption,
 }: HorizontalRadioSelectProps) {
-  // const [selectedOption, setSelectedOption] = useState(defaultOption);
-
   return (
     <div
       css={{
