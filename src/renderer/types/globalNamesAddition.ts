@@ -6,4 +6,8 @@ export type versionsIPC = {
 
 export type fileSystemIPC = {
   openFile: () => Promise<string>;
+  openDirectory: () => Promise<string>;
+  isFile: (path: string) => Promise<boolean>;
+  isDirectory: (path: string) => Promise<boolean>;
+  selectEpubFile: () => Promise<string>;
 };

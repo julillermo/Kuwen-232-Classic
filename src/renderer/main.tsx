@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
-import { versionsIPC, fileSystemIPC } from "./types/globalNamesAddition";
+import { versionsIPC } from "./types/globalNamesAddition";
 const { versions } = window;
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -22,13 +22,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
  * flag
  */
 
-console.log(
-  '👋 This message is being logged by "renderer.ts", included via Vite'
-);
-console.log(
-  '🧠 From what I understand, the main.tsx file will now serve as the "renderer" for communicating functionality'
-);
-
 console.log("node version:", versions.node());
 console.log("chrome version:", versions.chrome());
 console.log("node version:", versions.node());
@@ -37,6 +30,5 @@ console.log("node version:", versions.node());
 declare global {
   interface Window {
     versions: versionsIPC;
-    fileSystemIPC: fileSystemIPC;
   }
 }

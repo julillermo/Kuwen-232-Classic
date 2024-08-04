@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import mime from "mime";
 import { useEffect, useRef, useState } from "react";
 import { themeColors } from "./assets/themes/themeColors";
 import AppTitle from "./components/AppTitle";
@@ -17,20 +18,24 @@ const { fileSystem } = window;
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
 
-  const [epubInputType, setEpubInputType] = useState<string>("folder");
+  const [epubInputType, setEpubInputType] = useState<string>("folder"); // "file" | "folder"
+  const [epubPath, setEpubPath] = useState("");
+  const [epubInputState, setEpubInputState] = useState<
+    "valid" | "invalid" | "empty"
+  >("empty");
+
+  const [audioFilePath, setAudioFilePath] = useState("");
+
   const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
     defaultTimeLabelInputMethod
   );
-  const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
-  const [showAddFnToggle, setShowAddFnToggle] = useState(false);
-
-  const [epubPath, setEpubPath] = useState("");
-  const [audioFilePath, setAudioFilePath] = useState("");
-
   const [timeLabelsFilePath, SetTimeLabelsFilePath] = useState("");
   const timeLabelsFilePathRef = useRef("");
+  const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
   const [manualTimeLabelsTxt, setManualTimeLabelsTxt] = useState("");
   const manualTimeLabelsRef = useRef("");
+
+  const [showAddFnToggle, setShowAddFnToggle] = useState(false);
 
   useEffect(() => {
     if (Object.values(timeLabelInputMethod)[0] == "manual") {
@@ -48,13 +53,52 @@ function App() {
     }
   }, [timeLabelInputMethod]);
 
-  function handleShowAddFnToggle() {
-    showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
-  }
+  useEffect(() => {
+    epubFilePathValidation(epubPath);
+  }, [epubInputType, epubPath]);
 
   async function handleSetEpubPath() {
-    const epubPath = await fileSystem.openFile();
-    setEpubPath(epubPath);
+    if (epubInputType === "file") {
+      const epubPath = await fileSystem.selectEpubFile();
+      setEpubPath(epubPath);
+    } else if (epubInputType === "folder") {
+      const epubPath = await fileSystem.openDirectory();
+      setEpubPath(epubPath);
+    }
+  }
+  async function epubFilePathValidation(filePath: string) {
+    if (filePath.length > 0) {
+      if (epubInputType === "file") {
+        let isFile;
+        try {
+          isFile = await fileSystem.isFile(filePath);
+        } catch (err: unknown) {
+          isFile = false;
+        }
+        const isEpub = mime.getType(filePath) === "application/epub+zip";
+
+        if (isFile && isEpub) {
+          setEpubInputState("valid");
+        } else {
+          setEpubInputState("invalid");
+        }
+      } else if (epubInputType === "folder") {
+        let isDirectory;
+        try {
+          isDirectory = await fileSystem.isDirectory(filePath);
+        } catch (err: unknown) {
+          isDirectory = false;
+        }
+
+        if (isDirectory) {
+          setEpubInputState("valid");
+        } else {
+          setEpubInputState("invalid");
+        }
+      }
+    } else {
+      setEpubInputState("empty");
+    }
   }
   async function handleSetAudioFilePath() {
     const audioFilePath = await fileSystem.openFile();
@@ -71,6 +115,9 @@ function App() {
     setManualTimeLabelsTxt("");
     timeLabelsFilePathRef.current = "";
     manualTimeLabelsRef.current = "";
+  }
+  function handleShowAddFnToggle() {
+    showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
   }
 
   return (
@@ -142,6 +189,8 @@ function App() {
               <TextInput
                 value={epubPath}
                 onChange={setEpubPath}
+                validationFn={epubFilePathValidation}
+                invalidStyling={epubInputState === "invalid" ? true : false}
                 showHover={true}
                 customCSS={{ flexGrow: 1 }}
               />
@@ -290,7 +339,6 @@ function App() {
     </div>
   );
 }
-
 export default App;
 
 // Adding typing to the added objects in the global names
