@@ -19,3 +19,6 @@ contextBridge.exposeInMainWorld("fileSystem", {
   selectAudioFilePath: () => ipcRenderer.invoke("dialog:selectAudioFilePath"),
 });
 
+contextBridge.exposeInMainWorld("JSZip", {
+  readZip: (path: string) => ipcRenderer.invoke("JSZip:readZip", path),
+});

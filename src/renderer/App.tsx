@@ -11,9 +11,9 @@ import SplitButton from "./components/SplitButton";
 import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import { fileSystemIPC } from "./types/globalNamesAddition";
+import { fileSystemIPC, JSZipIPC } from "./types/globalNamesAddition";
 import { darkenHexColor } from "./utils/color";
-const { fileSystem } = window;
+const { fileSystem, JSZip } = window;
 
 type TextInputState = "valid" | "invalid" | "empty";
 
@@ -70,31 +70,28 @@ function App() {
     timeLabelsFilePath,
   ]);
 
-  async function handleSetEpubPath() {
-    if (epubInputType === "file") {
-      const epubPath = await fileSystem.selectEpubPath();
-      setEpubPath(epubPath);
-    } else if (epubInputType === "folder") {
-      const epubPath = await fileSystem.openDirectory();
-      setEpubPath(epubPath);
-    }
-  }
+  // TODO: generalize the path validations into a single function
   async function epubFilePathValidation(filePath: string) {
     if (filePath.length > 0) {
       if (epubInputType === "file") {
-        let isFile;
+        let isFile, isEpub;
         try {
           isFile = await fileSystem.isFile(filePath);
         } catch (err: unknown) {
           isFile = false;
         }
-        const isEpub = mime.getType(filePath) === "application/epub+zip";
 
-        if (isFile && isEpub) {
-          setEpubInputState("valid");
-        } else {
-          setEpubInputState("invalid");
-        }
+        const mimeList = [
+          "application/epub+zip",
+          "application/zip",
+          "x-zip-compressed",
+        ];
+        const mimeType = mime.getType(filePath);
+        mimeType && (isEpub = mimeList.includes(mimeType));
+
+        isFile && isEpub
+          ? setEpubInputState("valid")
+          : setEpubInputState("invalid");
       } else if (epubInputType === "folder") {
         let isDirectory;
         try {
@@ -103,20 +100,13 @@ function App() {
           isDirectory = false;
         }
 
-        if (isDirectory) {
-          setEpubInputState("valid");
-        } else {
-          setEpubInputState("invalid");
-        }
+        isDirectory ? setEpubInputState("valid") : setEpubInputState("invalid");
       }
     } else {
       setEpubInputState("empty");
     }
   }
-  async function handleSetAudioFilePath() {
-    const audioFilePath = await fileSystem.selectAudioFilePath();
-    setAudioFilePath(audioFilePath);
-  }
+  // TODO: validate if proper file-type is selected for Audio File
   async function audioFilePathValidation(filePath: string) {
     if (filePath.length > 0) {
       let isFile;
@@ -127,19 +117,14 @@ function App() {
       }
       const isMp3 = mime.getType(filePath) === "audio/mpeg";
 
-      if (isFile && isMp3) {
-        setAudioFileInputState("valid");
-      } else {
-        setAudioFileInputState("invalid");
-      }
+      isFile && isMp3
+        ? setAudioFileInputState("valid")
+        : setAudioFileInputState("invalid");
     } else {
       setAudioFileInputState("empty");
     }
   }
-  async function handleSetTimeLabelsFilePath() {
-    const timeLabelsFilePath = await fileSystem.openFile();
-    SetTimeLabelsFilePath(timeLabelsFilePath);
-  }
+  // TODO: validate if proper file-type is selected for Labels File
   async function timeLabelsFilePathValidation(filePath: string) {
     if (filePath.length > 0) {
       let isFile;
@@ -150,15 +135,33 @@ function App() {
       }
       const isTxt = mime.getType(filePath) === "text/plain";
 
-      if (isFile && isTxt) {
-        setTimeLabelsFileInputState("valid");
-      } else {
-        setTimeLabelsFileInputState("invalid");
-      }
+      isFile && isTxt
+        ? setTimeLabelsFileInputState("valid")
+        : setTimeLabelsFileInputState("invalid");
     } else {
       setTimeLabelsFileInputState("empty");
     }
   }
+
+  // TODO: generalize handle setting paths into a single function
+  async function handleSetEpubPath() {
+    if (epubInputType === "file") {
+      const epubPath = await fileSystem.selectEpubPath();
+      setEpubPath(epubPath);
+    } else if (epubInputType === "folder") {
+      const epubPath = await fileSystem.openDirectory();
+      setEpubPath(epubPath);
+    }
+  }
+  async function handleSetAudioFilePath() {
+    const audioFilePath = await fileSystem.selectAudioFilePath();
+    setAudioFilePath(audioFilePath);
+  }
+  async function handleSetTimeLabelsFilePath() {
+    const timeLabelsFilePath = await fileSystem.openFile();
+    SetTimeLabelsFilePath(timeLabelsFilePath);
+  }
+
   function clearFilePaths() {
     setEpubPath("");
     setAudioFilePath("");
@@ -169,6 +172,10 @@ function App() {
   }
   function handleShowAddFnToggle() {
     showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
+  }
+
+  function processEpubFile(filePath: string) {
+    JSZip.readZip(filePath);
   }
 
   return (
@@ -392,7 +399,10 @@ function App() {
               }}
             >
               <Button onClick={clearFilePaths} type="reset" text="Clear" />
-              <Button text="Process" />
+              <Button
+                onClick={() => processEpubFile(epubPath)}
+                text="Process"
+              />
             </div>
           </div>
         </form>
@@ -406,5 +416,6 @@ export default App;
 declare global {
   interface Window {
     fileSystem: fileSystemIPC;
+    JSZip: JSZipIPC;
   }
 }

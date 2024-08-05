@@ -44,7 +44,7 @@ export async function selectEpubPath() {
   const { canceled, filePaths } = await dialog.showOpenDialog({
     properties: ["openFile"],
     filters: [
-      { name: "EPUB", extensions: ["epub"] },
+      { name: "EPUB", extensions: ["epub", "zip"] },
       { name: "All Files", extensions: ["*"] },
     ],
   });
@@ -65,5 +65,3 @@ export async function selectAudioFilePath() {
     return filePaths[0];
   }
 }
-
-

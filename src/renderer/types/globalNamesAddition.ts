@@ -12,3 +12,7 @@ export type fileSystemIPC = {
   selectEpubPath: () => Promise<string>;
   selectAudioFilePath: () => Promise<string>;
 };
+
+export type JSZipIPC = {
+  readZip: (path: string) => void;
+};

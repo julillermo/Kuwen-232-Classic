@@ -12,7 +12,7 @@ export default function TextArea({ value, onChange, disabled }: TextAreaProps) {
   return (
     <div
       css={{
-        marginRight: "20px",
+        display: "flex",
       }}
     >
       <textarea
@@ -24,9 +24,8 @@ export default function TextArea({ value, onChange, disabled }: TextAreaProps) {
         placeholder="Paste the tab-separated time label values here"
         css={[
           {
-            width: "100%",
-            minWidth: "740px",
             height: "160px",
+            flexGrow: 1,
 
             outline: "none",
 

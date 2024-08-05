@@ -8,6 +8,7 @@ import {
   selectEpubPath,
   selectAudioFilePath,
 } from "./fileSystem";
+import { readZip } from "./zip";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -64,13 +65,15 @@ const createMainWindow = () => {
   // Toggle resizable window (comment in/out)
   // mainWindow.setResizable(false);
 
-  // IPC communicaition
+  // IPC communicaition - FileSystem
   ipcMain.handle("dialog:openFile", openFileDialog);
   ipcMain.handle("dialog:openDirectory", openDirectoryDialog);
   ipcMain.handle("node:fs.statSync.isFile", isFile);
   ipcMain.handle("node:fs.statSync.isDirectory", isDirectory);
   ipcMain.handle("dialog:selectEpubPath", selectEpubPath);
   ipcMain.handle("dialog:selectAudioFilePath", selectAudioFilePath);
+  // IPC communicaition - JSZip
+  ipcMain.handle("JSZip:readZip", readZip);
 };
 
 // This method will be called when Electron has finished

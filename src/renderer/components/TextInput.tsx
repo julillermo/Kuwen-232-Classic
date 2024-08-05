@@ -45,7 +45,7 @@ export default function TextInput({
         },
         {
           height: "24px",
-          width: "100%",
+          flexGrow: 1,
           borderRadius: "12px",
           padding: "8px 10px",
 
