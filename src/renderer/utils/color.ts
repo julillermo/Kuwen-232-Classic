@@ -1,4 +1,4 @@
-export function darkenHexColor(hexColor, amount = 0.1) {
+export function darkenHexColor(hexColor: string, amount = 0.1) {
   let r: number | string = parseInt(hexColor.substring(1, 3), 16);
   let g: number | string = parseInt(hexColor.substring(3, 5), 16);
   let b: number | string = parseInt(hexColor.substring(5, 7), 16);
@@ -14,7 +14,7 @@ export function darkenHexColor(hexColor, amount = 0.1) {
   return `#${r}${g}${b}`;
 }
 
-export function lightenHexColor(hexColor, amount = 0.1) {
+export function lightenHexColor(hexColor: string, amount = 0.1) {
   let r: number | string = parseInt(hexColor.substring(1, 3), 16);
   let g: number | string = parseInt(hexColor.substring(3, 5), 16);
   let b: number | string = parseInt(hexColor.substring(5, 7), 16);
@@ -30,7 +30,7 @@ export function lightenHexColor(hexColor, amount = 0.1) {
   return `#${r}${g}${b}`;
 }
 
-export function setHexTransparency(hexColor, amount = 0.9) {
+export function setHexTransparency(hexColor: string, amount = 0.9) {
   const a: number | string = Math.min(255, Math.round(255 * amount))
     .toString(16)
     .padStart(2, "0");

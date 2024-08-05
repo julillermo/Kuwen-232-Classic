@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import mime from "mime";
 import { useEffect, useRef, useState } from "react";
 import { themeColors } from "./assets/themes/themeColors";
 import AppTitle from "./components/AppTitle";
@@ -10,27 +11,36 @@ import SplitButton from "./components/SplitButton";
 import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import { fileSystemIPC, versionsIPC } from "./types/globalNamesAddition";
+import { fileSystemIPC } from "./types/globalNamesAddition";
 import { darkenHexColor } from "./utils/color";
 const { fileSystem } = window;
+
+type TextInputState = "valid" | "invalid" | "empty";
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
 
-  const [epubInputType, setEpubInputType] = useState<string>("folder");
+  const [epubInputType, setEpubInputType] = useState<string>("folder"); // "file" | "folder"
+  const [epubPath, setEpubPath] = useState("");
+  const [epubInputState, setEpubInputState] = useState<TextInputState>("empty");
+
+  const [audioFilePath, setAudioFilePath] = useState("");
+  const [audioFileInputState, setAudioFileInputState] =
+    useState<TextInputState>("empty");
+
   const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
     defaultTimeLabelInputMethod
   );
-  const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
-  const [showAddFnToggle, setShowAddFnToggle] = useState(false);
-
-  const [epubPath, setEpubPath] = useState("");
-  const [audioFilePath, setAudioFilePath] = useState("");
-
   const [timeLabelsFilePath, SetTimeLabelsFilePath] = useState("");
+  const [timeLabelsFileInputState, setTimeLabelsFileInputState] =
+    useState<TextInputState>("empty");
+
   const timeLabelsFilePathRef = useRef("");
+  const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
   const [manualTimeLabelsTxt, setManualTimeLabelsTxt] = useState("");
   const manualTimeLabelsRef = useRef("");
+
+  const [showAddFnToggle, setShowAddFnToggle] = useState(false);
 
   useEffect(() => {
     if (Object.values(timeLabelInputMethod)[0] == "manual") {
@@ -48,21 +58,106 @@ function App() {
     }
   }, [timeLabelInputMethod]);
 
-  function handleShowAddFnToggle() {
-    showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
-  }
+  useEffect(() => {
+    epubFilePathValidation(epubPath);
+    audioFilePathValidation(audioFilePath);
+    timeLabelsFilePathValidation(timeLabelsFilePath);
+  }, [
+    epubInputType,
+    epubPath,
+    audioFilePath,
+    timeLabelInputMethod,
+    timeLabelsFilePath,
+  ]);
 
   async function handleSetEpubPath() {
-    const epubPath = await fileSystem.openFile();
-    setEpubPath(epubPath);
+    if (epubInputType === "file") {
+      const epubPath = await fileSystem.selectEpubPath();
+      setEpubPath(epubPath);
+    } else if (epubInputType === "folder") {
+      const epubPath = await fileSystem.openDirectory();
+      setEpubPath(epubPath);
+    }
+  }
+  async function epubFilePathValidation(filePath: string) {
+    if (filePath.length > 0) {
+      if (epubInputType === "file") {
+        let isFile;
+        try {
+          isFile = await fileSystem.isFile(filePath);
+        } catch (err: unknown) {
+          isFile = false;
+        }
+        const isEpub = mime.getType(filePath) === "application/epub+zip";
+
+        if (isFile && isEpub) {
+          setEpubInputState("valid");
+        } else {
+          setEpubInputState("invalid");
+        }
+      } else if (epubInputType === "folder") {
+        let isDirectory;
+        try {
+          isDirectory = await fileSystem.isDirectory(filePath);
+        } catch (err: unknown) {
+          isDirectory = false;
+        }
+
+        if (isDirectory) {
+          setEpubInputState("valid");
+        } else {
+          setEpubInputState("invalid");
+        }
+      }
+    } else {
+      setEpubInputState("empty");
+    }
   }
   async function handleSetAudioFilePath() {
-    const audioFilePath = await fileSystem.openFile();
+    const audioFilePath = await fileSystem.selectAudioFilePath();
     setAudioFilePath(audioFilePath);
+  }
+  async function audioFilePathValidation(filePath: string) {
+    if (filePath.length > 0) {
+      let isFile;
+      try {
+        isFile = await fileSystem.isFile(filePath);
+      } catch (err: unknown) {
+        isFile = false;
+      }
+      const isMp3 = mime.getType(filePath) === "audio/mpeg";
+
+      if (isFile && isMp3) {
+        setAudioFileInputState("valid");
+      } else {
+        setAudioFileInputState("invalid");
+      }
+    } else {
+      setAudioFileInputState("empty");
+    }
   }
   async function handleSetTimeLabelsFilePath() {
     const timeLabelsFilePath = await fileSystem.openFile();
     SetTimeLabelsFilePath(timeLabelsFilePath);
+  }
+  async function timeLabelsFilePathValidation(filePath: string) {
+    if (filePath.length > 0) {
+      let isFile;
+      try {
+        isFile = await fileSystem.isFile(filePath);
+      } catch (err: unknown) {
+        isFile = false;
+      }
+      const isTxt = mime.getType(filePath) === "text/plain";
+
+      if (isFile && isTxt) {
+        setTimeLabelsFileInputState("valid");
+      } else {
+        setTimeLabelsFileInputState("invalid");
+      }
+    } else {
+      setTimeLabelsFileInputState("empty");
+    }
   }
   function clearFilePaths() {
     setEpubPath("");
@@ -71,6 +166,9 @@ function App() {
     setManualTimeLabelsTxt("");
     timeLabelsFilePathRef.current = "";
     manualTimeLabelsRef.current = "";
+  }
+  function handleShowAddFnToggle() {
+    showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
   }
 
   return (
@@ -142,6 +240,10 @@ function App() {
               <TextInput
                 value={epubPath}
                 onChange={setEpubPath}
+                validationFn={epubFilePathValidation}
+                toggleInvalidStyling={
+                  epubInputState === "invalid" ? true : false
+                }
                 showHover={true}
                 customCSS={{ flexGrow: 1 }}
               />
@@ -175,6 +277,10 @@ function App() {
               <TextInput
                 value={audioFilePath}
                 onChange={setAudioFilePath}
+                validationFn={audioFilePathValidation}
+                toggleInvalidStyling={
+                  audioFileInputState === "invalid" ? true : false
+                }
                 showHover={true}
               />
               <Button text="Set Path" onClick={handleSetAudioFilePath} />
@@ -207,6 +313,10 @@ function App() {
                 <TextInput
                   value={timeLabelsFilePath}
                   onChange={SetTimeLabelsFilePath}
+                  validationFn={timeLabelsFilePathValidation}
+                  toggleInvalidStyling={
+                    timeLabelsFileInputState === "invalid" ? true : false
+                  }
                   disabled={disabledTxtTimeLabelUI}
                   showHover={true}
                 />
@@ -290,13 +400,11 @@ function App() {
     </div>
   );
 }
-
 export default App;
 
 // Adding typing to the added objects in the global names
 declare global {
   interface Window {
-    versions: versionsIPC;
     fileSystem: fileSystemIPC;
   }
 }

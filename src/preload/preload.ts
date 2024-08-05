@@ -11,5 +11,11 @@ contextBridge.exposeInMainWorld("versions", {
 
 contextBridge.exposeInMainWorld("fileSystem", {
   openFile: () => ipcRenderer.invoke("dialog:openFile"),
+  openDirectory: () => ipcRenderer.invoke("dialog:openDirectory"),
+  isFile: (path: string) => ipcRenderer.invoke("node:fs.statSync.isFile", path),
+  isDirectory: (path: string) =>
+    ipcRenderer.invoke("node:fs.statSync.isDirectory", path),
+  selectEpubPath: () => ipcRenderer.invoke("dialog:selectEpubPath"),
+  selectAudioFilePath: () => ipcRenderer.invoke("dialog:selectAudioFilePath"),
 });
 

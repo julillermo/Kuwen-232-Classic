@@ -1,6 +1,13 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "node:path";
-import { handleFileOpen } from "./fileSystem";
+import {
+  openDirectoryDialog,
+  openFileDialog,
+  isFile,
+  isDirectory,
+  selectEpubPath,
+  selectAudioFilePath,
+} from "./fileSystem";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -58,7 +65,12 @@ const createMainWindow = () => {
   // mainWindow.setResizable(false);
 
   // IPC communicaition
-  ipcMain.handle("dialog:openFile", handleFileOpen);
+  ipcMain.handle("dialog:openFile", openFileDialog);
+  ipcMain.handle("dialog:openDirectory", openDirectoryDialog);
+  ipcMain.handle("node:fs.statSync.isFile", isFile);
+  ipcMain.handle("node:fs.statSync.isDirectory", isDirectory);
+  ipcMain.handle("dialog:selectEpubPath", selectEpubPath);
+  ipcMain.handle("dialog:selectAudioFilePath", selectAudioFilePath);
 };
 
 // This method will be called when Electron has finished

@@ -6,26 +6,29 @@ import { setHexTransparency } from "../utils/color";
 type TextInput = {
   value: string;
   onChange: React.Dispatch<React.SetStateAction<string>>;
+  validationFn?: (filePath: string) => void;
   disabled?: boolean;
   required?: boolean;
   showHover?: boolean;
-  valid?: boolean | null;
+  toggleInvalidStyling?: boolean;
   customCSS?: CustomCSSObject;
 };
 
 export default function TextInput({
   value,
   onChange,
+  validationFn,
   disabled,
   required,
   showHover = false,
-  valid = null,
+  toggleInvalidStyling = false,
   customCSS,
 }: TextInput) {
   return (
     <input
       value={value}
       onChange={(e) => {
+        validationFn && validationFn(e.target.value);
         onChange(e.target.value);
       }}
       type="text"
@@ -62,7 +65,7 @@ export default function TextInput({
           },
 
           "&:disabled": {
-            "user-select": "none",
+            userSelect: "none",
             outline: "none",
             boxShadow: "none",
             backgroundColor: setHexTransparency(themeColors.foreground, 0.5),
@@ -70,13 +73,12 @@ export default function TextInput({
 
           ...customCSS,
         },
-        valid != null &&
-          valid === false && {
+        toggleInvalidStyling === true && {
+          outline: `2px solid ${themeColors.alert}`,
+          "&:focus": {
             outline: `3px solid ${themeColors.alert}`,
-            "&:focus": {
-              outline: `4px solid ${themeColors.alert}`,
-            },
           },
+        },
       ]}
     />
   );
