@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import mime from "mime";
 import { useEffect, useRef, useState } from "react";
 import { themeColors } from "./assets/themes/themeColors";
 import AppTitle from "./components/AppTitle";
@@ -11,31 +10,37 @@ import SplitButton from "./components/SplitButton";
 import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import { fileSystemIPC, JSZipIPC } from "./types/globalNamesAddition";
+import { JSZipIPC, fileSystemIPC } from "./types/globalNamesAddition";
 import { darkenHexColor } from "./utils/color";
+import directoryExists, {
+  DirectoryExistsRes,
+} from "./utils/directoryValidation";
+import fileTypeValidation, {
+  FileTypeValidationRes,
+} from "./utils/fileTypeValidation";
 const { fileSystem, JSZip } = window;
-
-type TextInputState = "valid" | "invalid" | "empty";
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
 
   const [epubInputType, setEpubInputType] = useState<string>("folder"); // "file" | "folder"
   const [epubPath, setEpubPath] = useState("");
-  const [epubInputState, setEpubInputState] = useState<TextInputState>("empty");
+  const [epubInputState, setEpubInputState] = useState<
+    FileTypeValidationRes | DirectoryExistsRes
+  >("emptyPath");
 
   const [audioFilePath, setAudioFilePath] = useState("");
   const [audioFileInputState, setAudioFileInputState] =
-    useState<TextInputState>("empty");
+    useState<FileTypeValidationRes>("emptyPath");
 
   const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
     defaultTimeLabelInputMethod
   );
-  const [timeLabelsFilePath, SetTimeLabelsFilePath] = useState("");
-  const [timeLabelsFileInputState, setTimeLabelsFileInputState] =
-    useState<TextInputState>("empty");
+  const [timeLabelsPath, SetTimeLabelsPath] = useState("");
+  const [timeLabelsInputState, setTimeLabelsInputState] =
+    useState<FileTypeValidationRes>("emptyPath");
 
-  const timeLabelsFilePathRef = useRef("");
+  const timeLabelsPathRef = useRef("");
   const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
   const [manualTimeLabelsTxt, setManualTimeLabelsTxt] = useState("");
   const manualTimeLabelsRef = useRef("");
@@ -45,105 +50,65 @@ function App() {
   useEffect(() => {
     if (Object.values(timeLabelInputMethod)[0] == "manual") {
       setDisabledTxtTimeLabelUI(true);
-      timeLabelsFilePathRef.current = timeLabelsFilePath;
+      timeLabelsPathRef.current = timeLabelsPath;
 
-      SetTimeLabelsFilePath("");
+      SetTimeLabelsPath("");
       setManualTimeLabelsTxt(manualTimeLabelsRef.current);
     } else if (Object.values(timeLabelInputMethod)[0] == "file") {
       setDisabledTxtTimeLabelUI(false);
       manualTimeLabelsRef.current = manualTimeLabelsTxt;
 
       setManualTimeLabelsTxt("");
-      SetTimeLabelsFilePath(timeLabelsFilePathRef.current);
+      SetTimeLabelsPath(timeLabelsPathRef.current);
     }
   }, [timeLabelInputMethod]);
 
   useEffect(() => {
-    epubFilePathValidation(epubPath);
-    audioFilePathValidation(audioFilePath);
-    timeLabelsFilePathValidation(timeLabelsFilePath);
+    epubValidationHandler(epubPath, ["epub", "zip"], setEpubInputState);
+    filePathValidation(audioFilePath, "mp3", setAudioFileInputState);
+    filePathValidation(timeLabelsPath, "txt", setTimeLabelsInputState);
   }, [
     epubInputType,
     epubPath,
     audioFilePath,
     timeLabelInputMethod,
-    timeLabelsFilePath,
+    timeLabelsPath,
   ]);
 
-  // TODO: generalize the path validations into a single function
-  async function epubFilePathValidation(filePath: string) {
-    if (filePath.length > 0) {
-      if (epubInputType === "file") {
-        let isFile, isEpub;
-        try {
-          isFile = await fileSystem.isFile(filePath);
-        } catch (err: unknown) {
-          isFile = false;
-        }
-
-        const mimeList = [
-          "application/epub+zip",
-          "application/zip",
-          "x-zip-compressed",
-        ];
-        const mimeType = mime.getType(filePath);
-        mimeType && (isEpub = mimeList.includes(mimeType));
-
-        isFile && isEpub
-          ? setEpubInputState("valid")
-          : setEpubInputState("invalid");
-      } else if (epubInputType === "folder") {
-        let isDirectory;
-        try {
-          isDirectory = await fileSystem.isDirectory(filePath);
-        } catch (err: unknown) {
-          isDirectory = false;
-        }
-
-        isDirectory ? setEpubInputState("valid") : setEpubInputState("invalid");
-      }
-    } else {
-      setEpubInputState("empty");
-    }
+  async function filePathValidation(
+    filePath: string,
+    targetFileExtensions: string | string[],
+    setStateFn: React.Dispatch<React.SetStateAction<FileTypeValidationRes>>
+  ) {
+    const filePathStatus = await fileTypeValidation({
+      filePath,
+      targetFileExtensions,
+    });
+    setStateFn(filePathStatus);
   }
-  // TODO: validate if proper file-type is selected for Audio File
-  async function audioFilePathValidation(filePath: string) {
-    if (filePath.length > 0) {
-      let isFile;
-      try {
-        isFile = await fileSystem.isFile(filePath);
-      } catch (err: unknown) {
-        isFile = false;
-      }
-      const isMp3 = mime.getType(filePath) === "audio/mpeg";
-
-      isFile && isMp3
-        ? setAudioFileInputState("valid")
-        : setAudioFileInputState("invalid");
-    } else {
-      setAudioFileInputState("empty");
-    }
+  async function directoryPathValidation(
+    filePath: string,
+    setStateFn: React.Dispatch<React.SetStateAction<DirectoryExistsRes>>
+  ) {
+    const directoryPathStatus = await directoryExists({
+      directoryPath: filePath,
+    });
+    setStateFn(directoryPathStatus);
   }
-  // TODO: validate if proper file-type is selected for Labels File
-  async function timeLabelsFilePathValidation(filePath: string) {
-    if (filePath.length > 0) {
-      let isFile;
-      try {
-        isFile = await fileSystem.isFile(filePath);
-      } catch (err: unknown) {
-        isFile = false;
-      }
-      const isTxt = mime.getType(filePath) === "text/plain";
-
-      isFile && isTxt
-        ? setTimeLabelsFileInputState("valid")
-        : setTimeLabelsFileInputState("invalid");
-    } else {
-      setTimeLabelsFileInputState("empty");
+  async function epubValidationHandler(
+    path: string,
+    targetFileExtensions: string | string[],
+    setStateFn: React.Dispatch<
+      React.SetStateAction<FileTypeValidationRes | DirectoryExistsRes>
+    >
+  ) {
+    if (epubInputType === "file") {
+      filePathValidation(path, targetFileExtensions, setStateFn);
+    } else if (epubInputType === "folder") {
+      directoryPathValidation(path, setStateFn);
     }
   }
 
-  // TODO: generalize handle setting paths into a single function
   async function handleSetEpubPath() {
     if (epubInputType === "file") {
       const epubPath = await fileSystem.selectEpubPath();
@@ -158,16 +123,16 @@ function App() {
     setAudioFilePath(audioFilePath);
   }
   async function handleSetTimeLabelsFilePath() {
-    const timeLabelsFilePath = await fileSystem.openFile();
-    SetTimeLabelsFilePath(timeLabelsFilePath);
+    const timeLabelsPath = await fileSystem.openFile();
+    SetTimeLabelsPath(timeLabelsPath);
   }
 
   function clearFilePaths() {
     setEpubPath("");
     setAudioFilePath("");
-    SetTimeLabelsFilePath("");
+    SetTimeLabelsPath("");
     setManualTimeLabelsTxt("");
-    timeLabelsFilePathRef.current = "";
+    timeLabelsPathRef.current = "";
     manualTimeLabelsRef.current = "";
   }
   function handleShowAddFnToggle() {
@@ -247,9 +212,15 @@ function App() {
               <TextInput
                 value={epubPath}
                 onChange={setEpubPath}
-                validationFn={epubFilePathValidation}
+                validationFn={(path) => {
+                  epubValidationHandler(
+                    path,
+                    ["epub", "zip"],
+                    setEpubInputState
+                  );
+                }}
                 toggleInvalidStyling={
-                  epubInputState === "invalid" ? true : false
+                  epubInputState === "invalidPath" ? true : false
                 }
                 showHover={true}
                 customCSS={{ flexGrow: 1 }}
@@ -284,9 +255,11 @@ function App() {
               <TextInput
                 value={audioFilePath}
                 onChange={setAudioFilePath}
-                validationFn={audioFilePathValidation}
+                validationFn={(path) => {
+                  filePathValidation(path, "mp3", setAudioFileInputState);
+                }}
                 toggleInvalidStyling={
-                  audioFileInputState === "invalid" ? true : false
+                  audioFileInputState === "invalidPath" ? true : false
                 }
                 showHover={true}
               />
@@ -318,11 +291,13 @@ function App() {
                 }}
               >
                 <TextInput
-                  value={timeLabelsFilePath}
-                  onChange={SetTimeLabelsFilePath}
-                  validationFn={timeLabelsFilePathValidation}
+                  value={timeLabelsPath}
+                  onChange={SetTimeLabelsPath}
+                  validationFn={(path) => {
+                    filePathValidation(path, "txt", setTimeLabelsInputState);
+                  }}
                   toggleInvalidStyling={
-                    timeLabelsFileInputState === "invalid" ? true : false
+                    timeLabelsInputState === "invalidPath" ? true : false
                   }
                   disabled={disabledTxtTimeLabelUI}
                   showHover={true}
@@ -377,8 +352,8 @@ function App() {
               </Typography>
               {showAddFnToggle && (
                 <>
-                  <Button text="Resync" />
-                  <Button text="Match nav.html" />
+                  {/* <Button text="Resync" />
+                  <Button text="Match nav.html" /> */}
                 </>
               )}
             </div>
