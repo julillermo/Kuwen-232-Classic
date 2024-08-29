@@ -10,7 +10,6 @@ import SplitButton from "./components/SplitButton";
 import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import { FileSystemIPC, ValidationIPC } from "./types/globalNamesAddition";
 import { darkenHexColor } from "./utils/color";
 import { DirectoryExistsRes } from "./utils/directoryValidation";
 import { FileTypeValidationRes } from "./utils/fileTypeValidation";
@@ -383,11 +382,3 @@ function App() {
   );
 }
 export default App;
-
-// Adding typing to the added objects in the global names
-declare global {
-  interface Window {
-    fileSystem: FileSystemIPC;
-    validation: ValidationIPC;
-  }
-}

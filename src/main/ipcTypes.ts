@@ -10,8 +10,10 @@ import {
 export type FileSystemIPC = {
   openFile: () => Promise<string>;
   openDirectory: () => Promise<string>;
-  isAFile: (path: string) => Promise<boolean>;
+  isFile: (path: string) => Promise<boolean>;
   isDirectory: (path: string) => Promise<boolean>;
+  selectEpubPath: () => Promise<string>;
+  selectAudioFilePath: () => Promise<string>;
 };
 
 export type ValidationIPC = {

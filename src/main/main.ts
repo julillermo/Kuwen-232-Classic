@@ -1,5 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
+import { FileSystemIPC, ValidationIPC } from "./ipcTypes";
 import ipcHandler from "./ipcHandler";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
@@ -52,6 +53,15 @@ const createMainWindow = () => {
 
   ipcHandler();
 };
+
+// The following exposes the 'main' process function types
+//    to be accessible by the 'renderer' process
+declare global {
+  interface Window {
+    fileSystem: FileSystemIPC;
+    validation: ValidationIPC;
+  }
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
