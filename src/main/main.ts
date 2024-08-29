@@ -1,14 +1,6 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 import path from "node:path";
-import {
-  openDirectoryDialog,
-  openFileDialog,
-  isFile,
-  isDirectory,
-  selectEpubPath,
-  selectAudioFilePath,
-} from "./fileSystem";
-import { readZip } from "./zip";
+import ipcHandler from "./ipcHandler";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -20,7 +12,6 @@ if (require("electron-squirrel-startup")) {
 
 const createMainWindow = () => {
   // Create the browser window.
-
   // __dirname is ".vite/build"
   const mainWindow = new BrowserWindow({
     width: 800,
@@ -59,21 +50,7 @@ const createMainWindow = () => {
     );
   }
 
-  // Open the DevTools. (comment in/out)
-  // mainWindow.webContents.openDevTools();
-
-  // Toggle resizable window (comment in/out)
-  // mainWindow.setResizable(false);
-
-  // IPC communicaition - FileSystem
-  ipcMain.handle("dialog:openFile", openFileDialog);
-  ipcMain.handle("dialog:openDirectory", openDirectoryDialog);
-  ipcMain.handle("node:fs.statSync.isFile", isFile);
-  ipcMain.handle("node:fs.statSync.isDirectory", isDirectory);
-  ipcMain.handle("dialog:selectEpubPath", selectEpubPath);
-  ipcMain.handle("dialog:selectAudioFilePath", selectAudioFilePath);
-  // IPC communicaition - JSZip
-  ipcMain.handle("JSZip:readZip", readZip);
+  ipcHandler();
 };
 
 // This method will be called when Electron has finished

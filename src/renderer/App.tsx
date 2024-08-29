@@ -10,15 +10,11 @@ import SplitButton from "./components/SplitButton";
 import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
-import { JSZipIPC, fileSystemIPC } from "./types/globalNamesAddition";
+import { FileSystemIPC, ValidationIPC } from "./types/globalNamesAddition";
 import { darkenHexColor } from "./utils/color";
-import directoryExists, {
-  DirectoryExistsRes,
-} from "./utils/directoryValidation";
-import fileTypeValidation, {
-  FileTypeValidationRes,
-} from "./utils/fileTypeValidation";
-const { fileSystem, JSZip } = window;
+import { DirectoryExistsRes } from "./utils/directoryValidation";
+import { FileTypeValidationRes } from "./utils/fileTypeValidation";
+const { fileSystem, validation } = window;
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
@@ -80,7 +76,7 @@ function App() {
     targetFileExtensions: string | string[],
     setStateFn: React.Dispatch<React.SetStateAction<FileTypeValidationRes>>
   ) {
-    const filePathStatus = await fileTypeValidation({
+    const filePathStatus = await validation.fileTypeValidation({
       filePath,
       targetFileExtensions,
     });
@@ -90,7 +86,7 @@ function App() {
     filePath: string,
     setStateFn: React.Dispatch<React.SetStateAction<DirectoryExistsRes>>
   ) {
-    const directoryPathStatus = await directoryExists({
+    const directoryPathStatus = await validation.directoryExists({
       directoryPath: filePath,
     });
     setStateFn(directoryPathStatus);
@@ -140,7 +136,8 @@ function App() {
   }
 
   function processEpubFile(filePath: string) {
-    JSZip.readZip(filePath);
+    console.log("processEpub clicked");
+    console.log("filePath", filePath);
   }
 
   return (
@@ -390,7 +387,7 @@ export default App;
 // Adding typing to the added objects in the global names
 declare global {
   interface Window {
-    fileSystem: fileSystemIPC;
-    JSZip: JSZipIPC;
+    fileSystem: FileSystemIPC;
+    validation: ValidationIPC;
   }
 }

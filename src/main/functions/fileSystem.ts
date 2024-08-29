@@ -1,4 +1,4 @@
-import { IpcMainInvokeEvent, dialog } from "electron";
+import { dialog } from "electron";
 import * as fs from "node:fs";
 
 export async function openFileDialog() {
@@ -20,7 +20,7 @@ export async function openDirectoryDialog() {
   }
 }
 
-export function isFile(_: IpcMainInvokeEvent, path: string): boolean {
+export function isAFile(path: string): boolean {
   let stats;
   try {
     stats = fs.statSync(path);
@@ -30,7 +30,7 @@ export function isFile(_: IpcMainInvokeEvent, path: string): boolean {
   return stats ? stats.isFile() : false;
 }
 
-export function isDirectory(_: IpcMainInvokeEvent, path: string): boolean {
+export function isDirectory(path: string): boolean {
   let stats;
   try {
     stats = fs.statSync(path);
