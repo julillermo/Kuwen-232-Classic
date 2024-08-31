@@ -1,4 +1,4 @@
-import { isDirectory } from "./fileSystem";
+import { isDirectory } from "../node/fileSystem";
 
 export type DirectoryExistsProps = {
   directoryPath: string;

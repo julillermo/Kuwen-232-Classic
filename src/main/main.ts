@@ -1,6 +1,6 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
-import { FileSystemIPC, ValidationIPC } from "./ipcTypes";
+import { ElectronIPC, NodeIPC, UtilsIPC } from "./ipcTypes";
 import ipcHandler from "./ipcHandler";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
@@ -58,8 +58,9 @@ const createMainWindow = () => {
 //    to be accessible by the 'renderer' process
 declare global {
   interface Window {
-    fileSystem: FileSystemIPC;
-    validation: ValidationIPC;
+    electron: ElectronIPC;
+    node: NodeIPC;
+    utils: UtilsIPC;
   }
 }
 

@@ -13,7 +13,7 @@ import Typography from "./components/Typography";
 import { darkenHexColor } from "./utils/color";
 import { DirectoryExistsRes } from "./utils/directoryValidation";
 import { FileTypeValidationRes } from "./utils/fileTypeValidation";
-const { fileSystem, validation } = window;
+const { electron, utils } = window;
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
@@ -34,7 +34,6 @@ function App() {
   const [timeLabelsPath, SetTimeLabelsPath] = useState("");
   const [timeLabelsInputState, setTimeLabelsInputState] =
     useState<FileTypeValidationRes>("emptyPath");
-
   const timeLabelsPathRef = useRef("");
   const [disabledTxtTimeLabelUI, setDisabledTxtTimeLabelUI] = useState(false);
   const [manualTimeLabelsTxt, setManualTimeLabelsTxt] = useState("");
@@ -75,21 +74,23 @@ function App() {
     targetFileExtensions: string | string[],
     setStateFn: React.Dispatch<React.SetStateAction<FileTypeValidationRes>>
   ) {
-    const filePathStatus = await validation.fileTypeValidation({
+    const filePathStatus = await utils.fileTypeValidation({
       filePath,
       targetFileExtensions,
     });
     setStateFn(filePathStatus);
   }
+
   async function directoryPathValidation(
     filePath: string,
     setStateFn: React.Dispatch<React.SetStateAction<DirectoryExistsRes>>
   ) {
-    const directoryPathStatus = await validation.directoryExists({
+    const directoryPathStatus = await utils.directoryExists({
       directoryPath: filePath,
     });
     setStateFn(directoryPathStatus);
   }
+
   async function epubValidationHandler(
     path: string,
     targetFileExtensions: string | string[],
@@ -106,19 +107,25 @@ function App() {
 
   async function handleSetEpubPath() {
     if (epubInputType === "file") {
-      const epubPath = await fileSystem.selectEpubPath();
+      const epubPath = await electron.openFile({
+        filters: [{ name: "EPUB", extensions: ["epub", "zip"] }],
+      });
       setEpubPath(epubPath);
     } else if (epubInputType === "folder") {
-      const epubPath = await fileSystem.openDirectory();
+      const epubPath = await electron.openDirectory();
       setEpubPath(epubPath);
     }
   }
   async function handleSetAudioFilePath() {
-    const audioFilePath = await fileSystem.selectAudioFilePath();
+    const audioFilePath = await electron.openFile({
+      filters: [{ name: "MP3", extensions: ["mp3"] }],
+    });
     setAudioFilePath(audioFilePath);
   }
   async function handleSetTimeLabelsFilePath() {
-    const timeLabelsPath = await fileSystem.openFile();
+    const timeLabelsPath = await electron.openFile({
+      filters: [{ name: "TXT Files", extensions: ["txt"] }],
+    });
     SetTimeLabelsPath(timeLabelsPath);
   }
 

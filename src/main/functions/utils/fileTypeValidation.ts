@@ -1,5 +1,5 @@
 import { getMimeType } from "@zip.js/zip.js";
-import { isAFile } from "./fileSystem";
+import { isAFile } from "../node/fileSystem";
 
 export type FileTypeValidationProps = {
   filePath: string;

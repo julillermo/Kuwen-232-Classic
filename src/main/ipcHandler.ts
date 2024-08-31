@@ -1,14 +1,11 @@
 import { Event, ipcMain } from "electron";
+import { isDirectory, isAFile } from "./functions/node/fileSystem";
 import {
-  isDirectory,
-  isAFile,
-  openDirectoryDialog,
   openFileDialog,
-  selectEpubPath,
-  selectAudioFilePath,
-} from "./functions/fileSystem";
-import fileTypeValidation from "./functions/fileTypeValidation";
-import directoryExists from "./functions/directoryValidation";
+  openDirectoryDialog,
+} from "./functions/electron/dialog";
+import fileTypeValidation from "./functions/utils/fileTypeValidation";
+import directoryExists from "./functions/utils/directoryValidation";
 
 // Wraps the 'main' process functions into a function that accepts electron
 //  events of the type IpcMainInvokeEvent while allowing inputs from the
@@ -27,18 +24,15 @@ export default function ipcHandler() {
   // Toggle resizable window (comment in/out)
   // mainWindow.setResizable(false);
 
-  // IPC communication - filesystem
+  // IPC communication - electron:dialog
   ipcMain.handle("dialog:openFile", ipcEventWrapper(openFileDialog));
   ipcMain.handle("dialog:openDirectory", ipcEventWrapper(openDirectoryDialog));
+
+  // IPC communication - node:fs
   ipcMain.handle("node:fs.statSync.isAFile", ipcEventWrapper(isAFile));
   ipcMain.handle("node:fs.statSync.isDirectory", ipcEventWrapper(isDirectory));
-  ipcMain.handle("dialog:selectEpubPath", ipcEventWrapper(selectEpubPath));
-  ipcMain.handle(
-    "dialog:selectAudioFilePath",
-    ipcEventWrapper(selectAudioFilePath)
-  );
 
-  // IPC communication - validation
+  // IPC communication - utils:validation
   ipcMain.handle(
     "validation:fileTypeValidation",
     ipcEventWrapper(fileTypeValidation)
