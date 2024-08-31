@@ -1,4 +1,4 @@
-import { Event, ipcMain } from "electron";
+import { IpcMainInvokeEvent, ipcMain } from "electron";
 import { isDirectory, isAFile } from "./functions/node/fileSystem";
 import {
   openFileDialog,
@@ -11,10 +11,10 @@ import directoryExists from "./functions/utils/directoryValidation";
 //  events of the type IpcMainInvokeEvent while allowing inputs from the
 //  'renderer' process side of the application
 function ipcEventWrapper<Input, Output>(mainProcessFn: (arg: Input) => Output) {
-  return (_event: Event, args: Input) => mainProcessFn(args);
+  return (_event: IpcMainInvokeEvent, args: Input) => mainProcessFn(args);
 }
 
-// The following functions were originally part of the the 'main.ts' file
+// The following functions were originally part of the the 'main.ts' file.
 //    Along with the 'preload.ts', these functions are what allow the
 //    'main' and 'renderer' processes to interact.
 export default function ipcHandler() {
@@ -34,11 +34,11 @@ export default function ipcHandler() {
 
   // IPC communication - utils:validation
   ipcMain.handle(
-    "validation:fileTypeValidation",
+    "utils:validation.fileTypeValidation",
     ipcEventWrapper(fileTypeValidation)
   );
   ipcMain.handle(
-    "validation:directoryExists",
+    "utils:validation.directoryExists",
     ipcEventWrapper(directoryExists)
   );
 }

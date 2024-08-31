@@ -18,16 +18,19 @@ const { electron, utils } = window;
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
 
+  // EPUB FILE
   const [epubInputType, setEpubInputType] = useState<string>("folder"); // "file" | "folder"
   const [epubPath, setEpubPath] = useState("");
   const [epubInputState, setEpubInputState] = useState<
     FileTypeValidationRes | DirectoryExistsRes
   >("emptyPath");
 
+  // AUDIO FILE
   const [audioFilePath, setAudioFilePath] = useState("");
   const [audioFileInputState, setAudioFileInputState] =
     useState<FileTypeValidationRes>("emptyPath");
 
+  // TIME LABELS
   const [timeLabelInputMethod, setTimeLabelInputMethod] = useState<RadioOption>(
     defaultTimeLabelInputMethod
   );
@@ -39,8 +42,10 @@ function App() {
   const [manualTimeLabelsTxt, setManualTimeLabelsTxt] = useState("");
   const manualTimeLabelsRef = useRef("");
 
+  // Aadditional functions
   const [showAddFnToggle, setShowAddFnToggle] = useState(false);
 
+  // time label input change
   useEffect(() => {
     if (Object.values(timeLabelInputMethod)[0] == "manual") {
       setDisabledTxtTimeLabelUI(true);
@@ -57,6 +62,7 @@ function App() {
     }
   }, [timeLabelInputMethod]);
 
+  // check path validity
   useEffect(() => {
     epubValidationHandler(epubPath, ["epub", "zip"], setEpubInputState);
     filePathValidation(audioFilePath, "mp3", setAudioFileInputState);
@@ -69,6 +75,7 @@ function App() {
     timeLabelsPath,
   ]);
 
+  // path validation functions
   async function filePathValidation(
     filePath: string,
     targetFileExtensions: string | string[],
@@ -80,7 +87,6 @@ function App() {
     });
     setStateFn(filePathStatus);
   }
-
   async function directoryPathValidation(
     filePath: string,
     setStateFn: React.Dispatch<React.SetStateAction<DirectoryExistsRes>>
@@ -90,7 +96,6 @@ function App() {
     });
     setStateFn(directoryPathStatus);
   }
-
   async function epubValidationHandler(
     path: string,
     targetFileExtensions: string | string[],
@@ -105,6 +110,7 @@ function App() {
     }
   }
 
+  // file path handling functions
   async function handleSetEpubPath() {
     if (epubInputType === "file") {
       const epubPath = await electron.openFile({
@@ -129,6 +135,7 @@ function App() {
     SetTimeLabelsPath(timeLabelsPath);
   }
 
+  // button functions
   function clearFilePaths() {
     setEpubPath("");
     setAudioFilePath("");
@@ -140,7 +147,6 @@ function App() {
   function handleShowAddFnToggle() {
     showAddFnToggle ? setShowAddFnToggle(false) : setShowAddFnToggle(true);
   }
-
   function processEpubFile(filePath: string) {
     console.log("processEpub clicked");
     console.log("filePath", filePath);

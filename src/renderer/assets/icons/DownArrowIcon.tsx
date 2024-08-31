@@ -1,6 +1,5 @@
-// import { isFunction } from "util";
-// import downArrow from "./svg/SVGRepo/down-arrow-svgrepo-com.svg";
-import React, { ReactNode } from "react";
+// Taken from https://www.svgrepo.com/svg/533426/note-sticky
+import { ReactNode } from "react";
 
 type DownArrowIconProps = {
   height?: number | `${number}px`;
@@ -24,4 +23,3 @@ export default function DownArrowIcon({
     </svg>
   );
 }
-// Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools
