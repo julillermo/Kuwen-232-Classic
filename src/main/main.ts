@@ -1,7 +1,7 @@
 import { app, BrowserWindow } from "electron";
 import path from "node:path";
-import { ElectronIPC, NodeIPC, UtilsIPC } from "./ipcTypes";
 import ipcHandler from "./ipcHandler";
+import { ElectronIPC, NodeIPC } from "./ipcTypes";
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -60,7 +60,7 @@ declare global {
   interface Window {
     electron: ElectronIPC;
     node: NodeIPC;
-    utils: UtilsIPC;
+    // utils: UtilsIPC;
   }
 }
 

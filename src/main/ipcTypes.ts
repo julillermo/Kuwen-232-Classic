@@ -1,11 +1,3 @@
-import {
-  FileTypeValidationProps,
-  FileTypeValidationRes,
-} from "./functions/utils/fileTypeValidation";
-import {
-  DirectoryExistsProps,
-  DirectoryExistsRes,
-} from "./functions/utils/directoryValidation";
 import { OpenDialogProps } from "./functions/electron/dialog";
 
 // Unless required by the original function, it seems generally safer to
@@ -23,17 +15,7 @@ export type NodeIPC = {
   isDirectory: (path: string) => Promise<boolean>;
 };
 
-export type UtilsIPC = {
-  fileTypeValidation: (
-    args: FileTypeValidationProps
-  ) => Promise<FileTypeValidationRes>;
-  directoryExists: (args: DirectoryExistsProps) => DirectoryExistsRes;
-};
+// export type UtilsIPC = {};
 
 // Colleciton of types to be made accessible on the 'renderer' process:
-export {
-  FileTypeValidationProps,
-  FileTypeValidationRes,
-  DirectoryExistsProps,
-  DirectoryExistsRes,
-};
+export {};

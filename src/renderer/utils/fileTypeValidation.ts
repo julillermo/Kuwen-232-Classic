@@ -1,5 +1,5 @@
 import { getMimeType } from "@zip.js/zip.js";
-import { isAFile } from "../node/fileSystem";
+const { node } = window;
 
 export type FileTypeValidationProps = {
   filePath: string;
@@ -16,10 +16,10 @@ type CheckIfFileType = {
   targetFileExtensions: string | string[];
 };
 
-function checkIfFile(filePath: string): boolean {
+async function checkIfFile(filePath: string): Promise<boolean> {
   let isFile = false;
   try {
-    isFile = isAFile(filePath);
+    isFile = await node.isAFile(filePath);
   } catch (err: unknown) {
     isFile = false;
   }

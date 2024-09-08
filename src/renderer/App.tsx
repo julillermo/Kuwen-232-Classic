@@ -11,9 +11,13 @@ import TextArea from "./components/TextArea";
 import TextInput from "./components/TextInput";
 import Typography from "./components/Typography";
 import { darkenHexColor } from "./utils/color";
-import { DirectoryExistsRes } from "./utils/directoryValidation";
-import { FileTypeValidationRes } from "./utils/fileTypeValidation";
-const { electron, utils } = window;
+import fileTypeValidation, {
+  FileTypeValidationRes,
+} from "./utils/fileTypeValidation";
+import directoryExists, {
+  DirectoryExistsRes,
+} from "./utils/directoryValidation";
+const { electron } = window;
 
 function App() {
   const defaultTimeLabelInputMethod = { ".text file": "file" };
@@ -81,7 +85,7 @@ function App() {
     targetFileExtensions: string | string[],
     setStateFn: React.Dispatch<React.SetStateAction<FileTypeValidationRes>>
   ) {
-    const filePathStatus = await utils.fileTypeValidation({
+    const filePathStatus = await fileTypeValidation({
       filePath,
       targetFileExtensions,
     });
@@ -91,7 +95,7 @@ function App() {
     filePath: string,
     setStateFn: React.Dispatch<React.SetStateAction<DirectoryExistsRes>>
   ) {
-    const directoryPathStatus = await utils.directoryExists({
+    const directoryPathStatus = await directoryExists({
       directoryPath: filePath,
     });
     setStateFn(directoryPathStatus);

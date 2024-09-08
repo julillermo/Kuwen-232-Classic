@@ -3,8 +3,6 @@
 
 import { contextBridge, ipcRenderer } from "electron";
 import { OpenDialogProps } from "../main/functions/electron/dialog";
-import { DirectoryExistsProps } from "../main/functions/utils/directoryValidation";
-import { FileTypeValidationProps } from "../main/functions/utils/fileTypeValidation";
 
 // When calling these functions in the 'renderer' process, it may help to
 //  call them with the `await` keyword even when the functions aren't
@@ -36,9 +34,4 @@ contextBridge.exposeInMainWorld("node", {
     ipcRenderer.invoke("node:fs.statSync.isDirectory", args),
 });
 
-contextBridge.exposeInMainWorld("utils", {
-  fileTypeValidation: (args: FileTypeValidationProps) =>
-    ipcRenderer.invoke("utils:validation.fileTypeValidation", { ...args }),
-  directoryExists: (args: DirectoryExistsProps) =>
-    ipcRenderer.invoke("utils:validation.directoryExists", { ...args }),
-});
+contextBridge.exposeInMainWorld("utils", {});

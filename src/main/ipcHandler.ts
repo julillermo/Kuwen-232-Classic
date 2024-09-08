@@ -1,11 +1,9 @@
 import { IpcMainInvokeEvent, ipcMain } from "electron";
-import { isDirectory, isAFile } from "./functions/node/fileSystem";
 import {
-  openFileDialog,
   openDirectoryDialog,
+  openFileDialog,
 } from "./functions/electron/dialog";
-import fileTypeValidation from "./functions/utils/fileTypeValidation";
-import directoryExists from "./functions/utils/directoryValidation";
+import { isAFile, isDirectory } from "./functions/node/fileSystem";
 
 // Wraps the 'main' process functions into a function that accepts electron
 //  events of the type IpcMainInvokeEvent while allowing inputs from the
@@ -33,12 +31,5 @@ export default function ipcHandler() {
   ipcMain.handle("node:fs.statSync.isDirectory", ipcEventWrapper(isDirectory));
 
   // IPC communication - utils:validation
-  ipcMain.handle(
-    "utils:validation.fileTypeValidation",
-    ipcEventWrapper(fileTypeValidation)
-  );
-  ipcMain.handle(
-    "utils:validation.directoryExists",
-    ipcEventWrapper(directoryExists)
-  );
+  // [add utils functions here]
 }

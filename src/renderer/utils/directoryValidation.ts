@@ -1,4 +1,5 @@
-import { isDirectory } from "../node/fileSystem";
+// import { isDirectory } from "../node/fileSystem";
+const { node } = window;
 
 export type DirectoryExistsProps = {
   directoryPath: string;
@@ -7,16 +8,16 @@ export type DirectoryExistsProps = {
 type DirectoryExistsStatus = "validPath" | "invalidPath" | "emptyPath";
 export type DirectoryExistsRes = DirectoryExistsStatus | boolean | undefined;
 
-export default function directoryExists({
+export default async function directoryExists({
   directoryPath,
   booleanResult = false,
-}: DirectoryExistsProps): DirectoryExistsRes {
+}: DirectoryExistsProps): Promise<DirectoryExistsRes> {
   let validationResult: DirectoryExistsRes;
 
   if (directoryPath.length > 0) {
     let isADirectory;
     try {
-      isADirectory = isDirectory(directoryPath);
+      isADirectory = await node.isDirectory(directoryPath);
     } catch (err: unknown) {
       isADirectory = false;
     }
